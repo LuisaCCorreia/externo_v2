@@ -1,0 +1,5 @@
+spring:
+    data:
+        mongo:
+            uri : mongodb+srv://Luisa_Caetano:admin@cluster0.akagrud.mongodb.net/?retryWrites=true&w=majority
+            database : MicrosservicoExterno
