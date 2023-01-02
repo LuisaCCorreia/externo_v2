@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.shared.APICartaoTokenResponse;
 import com.scb.externo.shared.NovaCobrancaDTO;
 import com.scb.externo.shared.NovoCartaoDTO;
@@ -20,8 +21,8 @@ public class CartaoCreditoService {
        return autenticarService.autenticarCartao(headers, novoCartao);
     }
 
-    public void realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
-        cobrancaService.realizarCobranca(headers, novaCobranca);
+    public ResponseEntity<DadosCobranca> realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
+       return cobrancaService.realizarCobranca(headers, novaCobranca);
     }
     
 }

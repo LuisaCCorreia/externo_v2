@@ -8,11 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import com.scb.externo.models.BancoDeDados;
 import com.scb.externo.models.exceptions.ResourceNotFoundCreditCardException;
 import com.scb.externo.models.mongodb.DadosToken;
-import com.scb.externo.repository.cartaocredito.CartaoRepositoryInterface;
+import com.scb.externo.repository.cartaocredito.DadosCartaoRepository;
 import com.scb.externo.shared.APICartaoDeCreditoResponseBody;
 import com.scb.externo.shared.APICartaoTokenResponse;
 import com.scb.externo.shared.CartaoCreditoAsaas;
@@ -24,7 +22,7 @@ import com.scb.externo.shared.NovoCliente;
 public class AutenticarDadosService {
 
   @Autowired
-  CartaoRepositoryInterface cartaoRepository;
+  DadosCartaoRepository cartaoRepository;
 
   public ResponseEntity<APICartaoDeCreditoResponseBody> criarCliente(MultiValueMap<String, String> headers, String nomeTitular) {
     String criarClienteURL = "https://sandbox.asaas.com/api/v3/customers";
@@ -57,9 +55,6 @@ public class AutenticarDadosService {
       APICartaoTokenResponse bodyTokenizacao = respostaTokenizacao.getBody();
 
       if(bodyTokenizacao != null) {
-        BancoDeDados bancoDeDados = new BancoDeDados();
-        bancoDeDados.setCustomer(novoCliente.getId());
-        bancoDeDados.setToken(bodyTokenizacao.getCreditCardToken());
 
         DadosToken dadosToken = new DadosToken("1", novoCliente.getId(), bodyTokenizacao.getCreditCardToken());
 

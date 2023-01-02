@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.scb.externo.models.exceptions.ResourceInvalidCreditCardDataException;
+import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.service.cartaocredito.CartaoCreditoService;
 import com.scb.externo.shared.APICartaoTokenResponse;
 import com.scb.externo.shared.NovaCobrancaDTO;
@@ -50,7 +50,7 @@ public class CartaoCreditoController {
     }
 
     @PostMapping("/cobranca")
-    public void realizarCobranca(@RequestHeader MultiValueMap<String, String> headers, @RequestBody NovaCobrancaDTO novaCobranca) {
-        cartaoService.realizarCobranca(headers, novaCobranca);
+    public ResponseEntity<DadosCobranca> realizarCobranca(@RequestHeader MultiValueMap<String, String> headers, @RequestBody NovaCobrancaDTO novaCobranca) {
+        return cartaoService.realizarCobranca(headers, novaCobranca);
     }
 }

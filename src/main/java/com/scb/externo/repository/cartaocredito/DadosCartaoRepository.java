@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.scb.externo.models.mongodb.DadosToken;
 
-public interface CartaoRepositoryInterface extends MongoRepository<DadosToken, String>{
+public interface DadosCartaoRepository extends MongoRepository<DadosToken, String>{
     DadosToken findByCiclista(String ciclista);
 }
