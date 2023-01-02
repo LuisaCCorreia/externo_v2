@@ -1,28 +1,21 @@
 package com.scb.externo.email;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.Random;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.scb.externo.controller.email.EmailController;
 import com.scb.externo.models.email.Email;
-import com.scb.externo.models.exceptions.email.ResourceInvalidEmailException;
 import com.scb.externo.service.email.EmailService;
 import com.scb.externo.shared.email.NovoEmailDTO;
 
 import jakarta.mail.MessagingException;
 
 
-public class EmailControllerTests {
+class EmailControllerTests {
     EmailController emailController = new EmailController();
 
     EmailService emailService = mock(EmailService.class);

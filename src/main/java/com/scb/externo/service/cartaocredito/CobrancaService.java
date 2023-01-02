@@ -7,11 +7,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.scb.externo.models.BancoDeDados;
+import com.scb.externo.models.mongodb.DadosToken;
 import com.scb.externo.repository.cartaocredito.CartaoCreditoRepository;
+import com.scb.externo.repository.cartaocredito.CartaoRepositoryInterface;
 import com.scb.externo.shared.NovaCobrancaAsaas;
 import com.scb.externo.shared.NovaCobrancaDTO;
 
@@ -19,7 +22,7 @@ import com.scb.externo.shared.NovaCobrancaDTO;
 public class CobrancaService {
 
     @Autowired
-    CartaoCreditoRepository cartaoRepository;
+    CartaoRepositoryInterface cartaoRepository;
     
     public void realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
         String fazerCobrancaURL = "https://sandbox.asaas.com/api/v3/payments";
@@ -27,16 +30,16 @@ public class CobrancaService {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
         String strDate = dateFormat.format(date);  
 
+        DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
+
         NovaCobrancaAsaas novaCobrancaAsaas = new NovaCobrancaAsaas();
 
-        novaCobrancaAsaas.setCustomer(novaCobranca.getCiclista());
+        novaCobrancaAsaas.setCustomer(dadosCartaoCiclista.getCustomer());
         novaCobrancaAsaas.setDueDate(strDate);
         novaCobrancaAsaas.setValue(novaCobranca.getValor());
-
-        BancoDeDados bancoDeDados = cartaoRepository.mostrarItemPorId(novaCobranca.getCiclista());
-
-        System.out.println("Oi");
-        System.out.println(bancoDeDados.getToken());
+        novaCobrancaAsaas.setCreditCardToken(dadosCartaoCiclista.getToken());
+        
+        HttpEntity<NovaCobrancaAsaas> entity = new HttpEntity<NovaCobrancaAsaas>(novaCobrancaAsaas, headers);
         
     }
 }
