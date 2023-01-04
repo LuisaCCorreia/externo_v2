@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/test/java/com/scb/externo/consts/
+application.properties

@@ -8,53 +8,51 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
 import com.scb.externo.models.email.Email;
-import com.scb.externo.models.exceptions.email.ResourceNotFoundEmailException;
+import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.repository.email.EmailRepository;
 import com.scb.externo.shared.email.NovoEmailDTO;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EnvioEmailService {
-    @Autowired
-    private JavaMailSender mailSender;
+  @Autowired
+  private JavaMailSender mailSender;
 
-    @Autowired
-    EmailRepository emailRepository;
+  @Autowired
+  EmailRepository emailRepository;
 
-    private Random geradorId = new Random();
+  private Random geradorId = new Random();
     
-    public MimeMessage gerarEmail(NovoEmailDTO email) throws jakarta.mail.MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+  public MimeMessage gerarEmail(NovoEmailDTO email) throws jakarta.mail.MessagingException {
+    MimeMessage mimeMessage = mailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
    
-         helper.setFrom("luisa.c.correia@edu.unirio.br");
-         helper.setSubject("Sistema de Controle de Bicicletário");
-         helper.setText(email.getMensagem());
-         helper.setTo(email.getEmail());
+    helper.setFrom("luisa.c.correia@edu.unirio.br");
+    helper.setSubject("Sistema de Controle de Bicicletário");
+    helper.setText(email.getMensagem());
+    helper.setTo(email.getEmail());
    
-         return mimeMessage;
-       }
+    return mimeMessage;
+  }
 
-       public ResponseEntity<Email> enviarEmail(NovoEmailDTO email) throws MessagingException {
+  public ResponseEntity<Email> enviarEmail(NovoEmailDTO email) throws MessagingException {
 
-        MimeMessage emailGerado = gerarEmail(email);
-        
-        try {
+    MimeMessage emailGerado = gerarEmail(email);
+      
+    try {
 
-            mailSender.send(emailGerado);
-            Email emailCriado = new Email();
-            emailCriado.setId(Integer.toString(this.geradorId.nextInt(100000)));
-            emailCriado.setEmail(email.getEmail());
-            emailCriado.setMensagem(email.getMensagem());
-            emailRepository.registrarEmail(emailCriado);
-            
-            return new ResponseEntity<>(emailCriado, HttpStatus.OK);
-        } catch(Exception e){
-          throw new ResourceNotFoundEmailException("E-mail não encontrado");
-        }
-        }
+      mailSender.send(emailGerado);
+      Email emailCriado = new Email();
+      emailCriado.setId(Integer.toString(this.geradorId.nextInt(100000)));
+      emailCriado.setEmail(email.getEmail());
+      emailCriado.setMensagem(email.getMensagem());
+      emailRepository.registrarEmail(emailCriado);
+          
+      return new ResponseEntity<>(emailCriado, HttpStatus.OK);
+    } catch(Exception e){
+      throw new ResourceNotFoundException("E-mail não encontrado");
+    }
+  }
 }

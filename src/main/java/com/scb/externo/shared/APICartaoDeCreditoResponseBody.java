@@ -16,7 +16,7 @@ public class APICartaoDeCreditoResponseBody {
     private String postalCode;
     private String cpfCnpj;
     private String personType;
-    private String deleted;
+    private boolean deleted;
     private String[] additionalEmails;
     private String externalReference;
     private boolean notificationDisabled;
@@ -113,10 +113,10 @@ public class APICartaoDeCreditoResponseBody {
     public void setPersonType(String personType) {
         this.personType = personType;
     }
-    public String getDeleted() {
+    public boolean getDeleted() {
         return deleted;
     }
-    public void setDeleted(String deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
     public String[] getAdditionalEmails() {

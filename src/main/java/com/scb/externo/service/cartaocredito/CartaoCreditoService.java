@@ -11,18 +11,17 @@ import com.scb.externo.shared.NovoCartaoDTO;
 
 @Service
 public class CartaoCreditoService {
-    @Autowired
-    AutenticarDadosService autenticarService;
+   @Autowired
+   AutenticarDadosService autenticarService;
 
-    @Autowired
-    CobrancaService cobrancaService;
+   @Autowired
+   CobrancaService cobrancaService;
 
-    public ResponseEntity<APICartaoTokenResponse> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) {
-       return autenticarService.autenticarCartao(headers, novoCartao);
-    }
+   public ResponseEntity<APICartaoTokenResponse> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) {
+     return autenticarService.autenticarCartao(headers, novoCartao);
+   }
 
-    public ResponseEntity<DadosCobranca> realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
-       return cobrancaService.realizarCobranca(headers, novaCobranca);
-    }
-    
+   public ResponseEntity<DadosCobranca> realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
+     return cobrancaService.realizarCobranca(headers, novaCobranca);
+   } 
 }

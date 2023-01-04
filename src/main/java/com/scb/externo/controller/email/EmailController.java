@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.scb.externo.models.email.Email;
-import com.scb.externo.models.exceptions.email.ResourceInvalidEmailException;
+import com.scb.externo.models.exceptions.ResourceInvalidException;
 import com.scb.externo.service.email.EmailService;
 import com.scb.externo.shared.email.NovoEmailDTO;
 
@@ -26,7 +26,7 @@ public class EmailController {
 		if(partesEmail.length == 2 && !partesEmail[0].equals("") && !partesEmail[1].equals("")) {
 			return emailService.enviarEmail(email);
 		} else {
-			throw new ResourceInvalidEmailException("E-mail com formato inválido.");
+			throw new ResourceInvalidException("E-mail com formato inválido.");
 		}	
 	}
 }

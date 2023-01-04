@@ -7,6 +7,13 @@ public class CartaoCreditoAsaas {
     private String expiryYear;
     private String ccv;
     
+    public CartaoCreditoAsaas(String holderName, String number, String expiryMonth, String expiryYear, String ccv) {
+        this.holderName = holderName;
+        this.number = number;
+        this.expiryMonth = expiryMonth;
+        this.expiryYear = expiryYear;
+        this.ccv = ccv;
+    }
     public String getHolderName() {
         return holderName;
     }

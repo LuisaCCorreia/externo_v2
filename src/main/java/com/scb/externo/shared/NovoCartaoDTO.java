@@ -5,6 +5,13 @@ public class NovoCartaoDTO {
     private String nomeTitular;
     private String numero;
     private String validade;
+
+    public NovoCartaoDTO(String cvv, String nomeTitular, String numero, String validade) {
+        this.cvv = cvv;
+        this.nomeTitular = nomeTitular;
+        this.numero = numero;
+        this.validade = validade;
+    }
     
     public String getCvv() {
         return cvv;

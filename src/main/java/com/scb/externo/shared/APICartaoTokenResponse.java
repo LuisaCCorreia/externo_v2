@@ -4,7 +4,7 @@ public class APICartaoTokenResponse {
     private String creditCardNumber;
     private String creditCardBrand;
     private String creditCardToken;
-    
+
     public String getCreditCardNumber() {
         return creditCardNumber;
     }

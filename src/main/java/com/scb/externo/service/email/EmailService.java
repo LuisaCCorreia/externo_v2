@@ -15,5 +15,4 @@ public class EmailService {
   public ResponseEntity<Email> enviarEmail(NovoEmailDTO novoEmail) throws MessagingException {
     return envioService.enviarEmail(novoEmail);
   }
-    
 }

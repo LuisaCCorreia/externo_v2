@@ -4,6 +4,11 @@ public class NovaTokenizacao {
     private String customer;
     private CartaoCreditoAsaas creditCard;
     
+    public NovaTokenizacao(String customer, CartaoCreditoAsaas creditCard) {
+        this.customer = customer;
+        this.creditCard = creditCard;
+    }
+    
     public String getCustomer() {
         return customer;
     }

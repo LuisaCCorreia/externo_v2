@@ -6,7 +6,14 @@ public class NovaCobrancaAsaas {
     private String dueDate;
     private Float value;
     private String creditCardToken;
-    
+
+    public NovaCobrancaAsaas(String customer, String dueDate, Float value, String creditCardToken) {
+        this.customer = customer;
+        this.dueDate = dueDate;
+        this.value = value;
+        this.creditCardToken = creditCardToken;
+    }
+
     public String getCustomer() {
         return customer;
     }

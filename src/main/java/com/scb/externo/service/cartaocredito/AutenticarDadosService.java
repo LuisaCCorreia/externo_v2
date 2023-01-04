@@ -1,14 +1,14 @@
 package com.scb.externo.service.cartaocredito;
 
 import java.time.LocalDate;
-
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import com.scb.externo.models.exceptions.ResourceNotFoundCreditCardException;
+import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosToken;
 import com.scb.externo.repository.cartaocredito.DadosCartaoRepository;
 import com.scb.externo.shared.APICartaoDeCreditoResponseBody;
@@ -32,22 +32,34 @@ public class AutenticarDadosService {
     return new RestTemplate().postForEntity(criarClienteURL, entity, APICartaoDeCreditoResponseBody.class);
   }
 
+  private String codigoUUID() {
+    UUID uuid = UUID.randomUUID();
+    return uuid.toString();
+  }
+
+  private CartaoCreditoAsaas gerarCartaoAsaas(NovoCartaoDTO novoCartao, String holderName) {
+
+    LocalDate data = LocalDate.parse(novoCartao.getValidade());
+
+    return  new CartaoCreditoAsaas(holderName, novoCartao.getNumero(), Integer.toString(data.getMonthValue()), Integer.toString(data.getYear()), novoCartao.getCvv());
+  }
+
+  private NovaTokenizacao gerarDadosParaTokenizacao(String clienteId, CartaoCreditoAsaas cartaoAsaas) {
+    return new NovaTokenizacao(clienteId, cartaoAsaas);
+  }
+
+  private void registrarDadosAutenticacao(String clienteId, String tokenCartao) {
+    DadosToken dadosToken = new DadosToken(codigoUUID(),clienteId, tokenCartao);
+    cartaoRepository.save(dadosToken);
+  }
+
   public ResponseEntity<APICartaoTokenResponse> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) {
     APICartaoDeCreditoResponseBody novoCliente = criarCliente(headers, novoCartao.getNomeTitular()).getBody();
 
     if(novoCliente != null) {
-      LocalDate data = LocalDate.parse(novoCartao.getValidade());
-      CartaoCreditoAsaas cartaoAsaas = new CartaoCreditoAsaas();
-      cartaoAsaas.setExpiryMonth(Integer.toString(data.getMonthValue()));
-      cartaoAsaas.setExpiryYear(Integer.toString(data.getYear()));
-      cartaoAsaas.setHolderName(novoCliente.getName());
-      cartaoAsaas.setNumber(novoCartao.getNumero());
-      cartaoAsaas.setCcv(novoCartao.getCvv());
-  
-      NovaTokenizacao autenticacao = new NovaTokenizacao();
-      autenticacao.setCustomer(novoCliente.getId());
-      autenticacao.setCreditCard(cartaoAsaas);
-  
+      
+      CartaoCreditoAsaas cartaoAsaas = gerarCartaoAsaas(novoCartao, novoCliente.getName());
+      NovaTokenizacao autenticacao = gerarDadosParaTokenizacao(novoCliente.getId(), cartaoAsaas);
       String autenticarCartaoURL = "https://sandbox.asaas.com/api/v3/creditCard/tokenize";
       HttpEntity<NovaTokenizacao> entity = new HttpEntity<>(autenticacao, headers);
 
@@ -56,15 +68,13 @@ public class AutenticarDadosService {
 
       if(bodyTokenizacao != null) {
 
-        DadosToken dadosToken = new DadosToken("1", novoCliente.getId(), bodyTokenizacao.getCreditCardToken());
-
-        cartaoRepository.save(dadosToken);
+        registrarDadosAutenticacao(novoCliente.getId(), bodyTokenizacao.getCreditCardToken());         
 
         return respostaTokenizacao;
       } else {
-        throw new ResourceNotFoundCreditCardException("Não encontrado.");  
+        throw new ResourceNotFoundException("Não encontrado.");  
       }     
     }
-    throw new ResourceNotFoundCreditCardException("Não encontrado.");  
+    throw new ResourceNotFoundException("Não encontrado.");  
   }
 }

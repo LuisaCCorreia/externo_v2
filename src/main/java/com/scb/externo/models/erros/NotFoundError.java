@@ -1,16 +1,16 @@
 package com.scb.externo.models.erros;
 
-public class InvalidCreditCardDataError {
+public class NotFoundError {
     private String id;
     private int status;
     private String mensagem;
-
-    public InvalidCreditCardDataError(String id, int status, String mensagem) {
+    
+    public NotFoundError(String id, int status, String mensagem) {
         this.id = id;
         this.status = status;
         this.mensagem = mensagem;
     }
-
+    
     public String getId() {
         return id;
     }

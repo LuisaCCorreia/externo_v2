@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import com.scb.externo.models.exceptions.ResourceNotFoundCreditCardException;
+
+import com.scb.externo.models.cartaocredito.CobrancaStatus;
+import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.models.mongodb.DadosToken;
 import com.scb.externo.repository.cartaocredito.CobrancaRepository;
@@ -29,33 +31,36 @@ public class CobrancaService {
     @Autowired
     CobrancaRepository cobrancaRepository;
     
-    public ResponseEntity<DadosCobranca> realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
-        String fazerCobrancaURL = "https://sandbox.asaas.com/api/v3/payments";
+    private NovaCobrancaAsaas gerarDadosCobranca(NovaCobrancaDTO novaCobranca) {
+        
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
         String strDate = dateFormat.format(date);  
 
         DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
 
-        NovaCobrancaAsaas novaCobrancaAsaas = new NovaCobrancaAsaas();
+        return new NovaCobrancaAsaas(dadosCartaoCiclista.getCustomer(), strDate, novaCobranca.getValor(), dadosCartaoCiclista.getToken());
+    }
 
-        novaCobrancaAsaas.setCustomer(dadosCartaoCiclista.getCustomer());
-        novaCobrancaAsaas.setDueDate(strDate);
-        novaCobrancaAsaas.setValue(novaCobranca.getValor());
-        novaCobrancaAsaas.setCreditCardToken(dadosCartaoCiclista.getToken());
+    private void registrarDadosCobranca(DadosCobranca dadosCobranca ) {
+        cobrancaRepository.save(dadosCobranca);
+    }
+
+    public ResponseEntity<DadosCobranca> realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
+        String fazerCobrancaURL = "https://sandbox.asaas.com/api/v3/payments";
         
+        NovaCobrancaAsaas novaCobrancaAsaas = gerarDadosCobranca(novaCobranca);
+
         HttpEntity<NovaCobrancaAsaas> entity = new HttpEntity<>(novaCobrancaAsaas, headers);
 
         AsaasCobrancaResponseDTO respostaCobranca = new RestTemplate().postForEntity(fazerCobrancaURL, entity, AsaasCobrancaResponseDTO.class).getBody();
-        
         if(respostaCobranca != null) {
-            DadosCobranca cobrancaResponse = new DadosCobranca(respostaCobranca.getId(), respostaCobranca.getStatus(), strDate, strDate, respostaCobranca.getValue(), novaCobranca.getCiclista());
+            DadosCobranca cobrancaResponse = new DadosCobranca(respostaCobranca.getId(), CobrancaStatus.PAGA.getStatus(), respostaCobranca.getDueDate(), respostaCobranca.getDueDate(), respostaCobranca.getValue(), novaCobranca.getCiclista());
+            registrarDadosCobranca(cobrancaResponse);
 
-            cobrancaRepository.save(cobrancaResponse);
-            return new ResponseEntity<>(cobrancaResponse, headers, HttpStatus.OK);
+            return new ResponseEntity<>(cobrancaResponse, HttpStatus.OK);
         } else {
-            throw new ResourceNotFoundCreditCardException("Não encontrado");
+            throw new ResourceNotFoundException("Não encontrado");
         }
-
     }
 }
