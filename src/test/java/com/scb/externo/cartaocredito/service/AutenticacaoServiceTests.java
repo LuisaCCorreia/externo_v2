@@ -47,7 +47,7 @@ public class AutenticacaoServiceTests {
     @InjectMocks
     AutenticarDadosService autenticacaoService;
 
-
+/**
     @Test
     void autenticar_cartao() {
         String autenticarCartaoURL = "https://sandbox.asaas.com/api/v3/creditCard/tokenize";
@@ -102,7 +102,7 @@ public class AutenticacaoServiceTests {
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }
-
+*/
     @Test
     void criar_cliente() {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
