@@ -85,7 +85,14 @@ public class CartaoCreditoControllerCobrancaTests {
         String strDate = dateFormat.format(date);  
 
         
-        DadosCobranca dadosRetornados = new DadosCobranca("pay_6676054201746363", CobrancaStatus.PAGA.getStatus(), strDate, strDate, novaCobranca.getValor(), novaCobranca.getCiclista());
+        DadosCobranca dadosRetornados = new DadosCobranca();
+
+        dadosRetornados.setCiclista(novaCobranca.getCiclista());
+        dadosRetornados.setHoraFinalizacao(strDate);
+        dadosRetornados.setHoraSolicitacao(strDate);
+        dadosRetornados.setId("pay_6676054201746363");
+        dadosRetornados.setStatus(CobrancaStatus.PAGA.getStatus());
+        dadosRetornados.setValor(novaCobranca.getValor());
         
         when(mockedCartaoService.realizarCobranca(headers, novaCobranca)).thenReturn(new ResponseEntity<DadosCobranca>(dadosRetornados, HttpStatus.OK));
 

@@ -24,14 +24,6 @@ public class AutenticarDadosService {
   @Autowired
   DadosCartaoRepository cartaoRepository;
 
-  public ResponseEntity<APICartaoDeCreditoResponseBody> criarCliente(MultiValueMap<String, String> headers, String nomeTitular) {
-    String criarClienteURL = "https://sandbox.asaas.com/api/v3/customers";
-    NovoCliente novoCliente = new NovoCliente();
-    novoCliente.setName(nomeTitular);
-    HttpEntity<NovoCliente> entity = new HttpEntity<>(novoCliente, headers);
-    return new RestTemplate().postForEntity(criarClienteURL, entity, APICartaoDeCreditoResponseBody.class);
-  }
-
   private String codigoUUID() {
     UUID uuid = UUID.randomUUID();
     return uuid.toString();
@@ -51,6 +43,14 @@ public class AutenticarDadosService {
   private void registrarDadosAutenticacao(String clienteId, String tokenCartao) {
     DadosToken dadosToken = new DadosToken(codigoUUID(),clienteId, tokenCartao);
     cartaoRepository.save(dadosToken);
+  }
+
+  public ResponseEntity<APICartaoDeCreditoResponseBody> criarCliente(MultiValueMap<String, String> headers, String nomeTitular) {
+    String criarClienteURL = "https://sandbox.asaas.com/api/v3/customers";
+    NovoCliente novoCliente = new NovoCliente();
+    novoCliente.setName(nomeTitular);
+    HttpEntity<NovoCliente> entity = new HttpEntity<>(novoCliente, headers);
+    return new RestTemplate().postForEntity(criarClienteURL, entity, APICartaoDeCreditoResponseBody.class);
   }
 
   public ResponseEntity<APICartaoTokenResponse> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) {

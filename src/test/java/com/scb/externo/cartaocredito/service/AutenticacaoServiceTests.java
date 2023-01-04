@@ -1,6 +1,8 @@
 package com.scb.externo.cartaocredito.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,8 +45,8 @@ public class AutenticacaoServiceTests {
 
     @InjectMocks
     AutenticarDadosService autenticacaoService;
-/*
-    //Terminar de preencher dados quando a internet voltar
+
+    /**
     @Test
     void autenticar_cartao() {
         String autenticarCartaoURL = "https://sandbox.asaas.com/api/v3/creditCard/tokenize";
@@ -86,7 +88,6 @@ public class AutenticacaoServiceTests {
 
         //Dados a serem armazenados no banco de dados
         DadosToken dadosToken = new DadosToken(UUID.randomUUID().toString(),clienteCriado.getId(), respostaToken.getCreditCardToken());
-
         
         when(mockedRestTemplate.postForEntity(criarClienteURL, new HttpEntity<>(novoCliente, headers), 
         APICartaoDeCreditoResponseBody.class))
@@ -99,6 +100,19 @@ public class AutenticacaoServiceTests {
         ResponseEntity<APICartaoTokenResponse> respostaRecebida = autenticacaoService.autenticarCartao(headers, novoCartao);
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
-    }*/
+    }
+*/
+    @Test
+    void criar_cliente() {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+        headers.add("access_token", Key.ASAASKEY);
+        NovoCliente novoCliente = new NovoCliente();
+        novoCliente.setName("Maria");
+
+        ResponseEntity<APICartaoDeCreditoResponseBody> respostaRecebida = autenticacaoService.criarCliente(headers, novoCliente.getName());
+
+        assertEquals("Maria", respostaRecebida.getBody().getName());
+    }
     
 }

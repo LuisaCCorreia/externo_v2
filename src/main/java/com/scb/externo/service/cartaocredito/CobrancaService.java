@@ -55,7 +55,15 @@ public class CobrancaService {
 
         AsaasCobrancaResponseDTO respostaCobranca = new RestTemplate().postForEntity(fazerCobrancaURL, entity, AsaasCobrancaResponseDTO.class).getBody();
         if(respostaCobranca != null) {
-            DadosCobranca cobrancaResponse = new DadosCobranca(respostaCobranca.getId(), CobrancaStatus.PAGA.getStatus(), respostaCobranca.getDueDate(), respostaCobranca.getDueDate(), respostaCobranca.getValue(), novaCobranca.getCiclista());
+
+            DadosCobranca cobrancaResponse = new DadosCobranca();
+            cobrancaResponse.setCiclista(novaCobranca.getCiclista());
+            cobrancaResponse.setHoraFinalizacao(respostaCobranca.getDueDate());
+            cobrancaResponse.setHoraSolicitacao(respostaCobranca.getDueDate());
+            cobrancaResponse.setId(respostaCobranca.getId());
+            cobrancaResponse.setStatus(CobrancaStatus.PAGA.getStatus());
+            cobrancaResponse.setValor(respostaCobranca.getValue());
+
             registrarDadosCobranca(cobrancaResponse);
 
             return new ResponseEntity<>(cobrancaResponse, HttpStatus.OK);

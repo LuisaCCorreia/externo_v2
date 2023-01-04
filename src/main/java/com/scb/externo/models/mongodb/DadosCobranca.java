@@ -11,15 +11,6 @@ public class DadosCobranca {
     private Float valor;
     private String ciclista;
 
-    public DadosCobranca(String id, String status, String horaSolicitacao, String horaFinalizacao, Float valor, String ciclista) {
-        this.id = id;
-        this.status = status;
-        this.horaSolicitacao = horaSolicitacao;
-        this.horaFinalizacao = horaFinalizacao;
-        this.valor = valor;
-        this.ciclista = ciclista;
-    }
-
     public String getId() {
         return id;
     }
