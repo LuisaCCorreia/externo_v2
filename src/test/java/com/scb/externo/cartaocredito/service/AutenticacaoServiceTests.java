@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,7 +47,7 @@ public class AutenticacaoServiceTests {
     @InjectMocks
     AutenticarDadosService autenticacaoService;
 
-    /**
+
     @Test
     void autenticar_cartao() {
         String autenticarCartaoURL = "https://sandbox.asaas.com/api/v3/creditCard/tokenize";
@@ -101,7 +102,7 @@ public class AutenticacaoServiceTests {
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }
-*/
+
     @Test
     void criar_cliente() {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
