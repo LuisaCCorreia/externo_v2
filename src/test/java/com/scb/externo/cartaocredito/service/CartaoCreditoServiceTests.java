@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 import com.scb.externo.consts.Key;
 import com.scb.externo.models.cartaocredito.CobrancaStatus;
 import com.scb.externo.models.mongodb.DadosCobranca;
@@ -27,7 +26,7 @@ import com.scb.externo.shared.NovaCobrancaDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class CartaoCreditoServiceTests {
+class CartaoCreditoServiceTests {
 
     @Mock
     CobrancaService mockedCobrancaService;

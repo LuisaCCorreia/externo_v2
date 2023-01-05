@@ -1,7 +1,6 @@
 package com.scb.externo.handler;
 
-import java.util.Random;
-
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,11 +12,10 @@ import com.scb.externo.models.exceptions.ResourceInvalidException;
 
 @ControllerAdvice
 public class InvalidExceptionHandle {
-    private Random geradorId = new Random();
 
     @ExceptionHandler(ResourceInvalidException.class)
     public ResponseEntity<InvalidDataError> handleResourceInvalidEmailException(ResourceInvalidException exception) {
-        InvalidDataError error = new InvalidDataError(Integer.toString(geradorId.nextInt(25)), HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getMessage());
+        InvalidDataError error = new InvalidDataError(UUID.randomUUID().toString(), HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getMessage());
         return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

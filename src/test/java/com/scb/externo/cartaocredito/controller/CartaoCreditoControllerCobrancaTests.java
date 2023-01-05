@@ -28,7 +28,7 @@ import com.scb.externo.shared.NovaCobrancaDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class CartaoCreditoControllerCobrancaTests {
+class CartaoCreditoControllerCobrancaTests {
 
     @Mock
     CartaoCreditoService mockedCartaoService;

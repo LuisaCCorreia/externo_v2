@@ -22,7 +22,7 @@ import com.scb.externo.shared.NovoCliente;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class AutenticacaoServiceTests {
+class AutenticacaoServiceTests {
 
     @Mock
     RestTemplate mockedRestTemplate;
