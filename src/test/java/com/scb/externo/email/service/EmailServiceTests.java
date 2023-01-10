@@ -21,7 +21,7 @@ import jakarta.mail.MessagingException;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class EmailServiceTests {
+class EmailServiceTests {
 
     @Mock
     EnvioEmailService mockedEnvioService;
