@@ -9,15 +9,8 @@ public class DadosCobranca {
     private String horaSolicitacao;
     private String horaFinalizacao;
     private float valor;
-    private String statusAluguel;
     private String ciclista;
 
-    public String getStatusAluguel() {
-        return statusAluguel;
-    }
-    public void setStatusAluguel(String statusAluguel) {
-        this.statusAluguel = statusAluguel;
-    }
     public String getId() {
         return id;
     }

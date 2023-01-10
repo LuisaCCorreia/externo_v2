@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import com.scb.externo.models.email.Email;
 import com.scb.externo.models.exceptions.ResourceNotFoundException;
+import com.scb.externo.models.mongodb.DadosEmail;
 import com.scb.externo.repository.email.EmailRepository;
 import com.scb.externo.shared.email.NovoEmailDTO;
 import jakarta.mail.MessagingException;
@@ -45,7 +46,9 @@ public class EnvioEmailService {
       emailCriado.setId(UUID.randomUUID().toString());
       emailCriado.setEmail(email.getEmail());
       emailCriado.setMensagem(email.getMensagem());
-      emailRepository.registrarEmail(emailCriado);
+      DadosEmail dadosEmail = new DadosEmail();
+      dadosEmail.setEmail(emailCriado);
+      emailRepository.save(dadosEmail);
           
       return new ResponseEntity<>(emailCriado, HttpStatus.OK);
     } catch(Exception e){

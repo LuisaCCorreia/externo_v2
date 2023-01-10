@@ -1,14 +1,9 @@
 package com.scb.externo.repository.email;
 
-import java.util.ArrayList;
 import org.springframework.stereotype.Repository;
-import com.scb.externo.models.email.Email;
+import com.scb.externo.models.mongodb.DadosEmail;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 @Repository
-public class EmailRepository {
-  private ArrayList<Email> memoria = new ArrayList<>();
-  
-  public void registrarEmail(Email email) {      
-      memoria.add(email); 
-	  }
-}
+public interface EmailRepository extends MongoRepository<DadosEmail, String>{}
