@@ -1,8 +1,8 @@
 package com.scb.externo.cartaocredito.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,10 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 import com.scb.externo.consts.Key;
 import com.scb.externo.controller.cartaocredito.CartaoCreditoController;
 import com.scb.externo.models.exceptions.ResourceInvalidException;
+import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.service.cartaocredito.CartaoCreditoService;
 import com.scb.externo.shared.APICartaoTokenResponse;
 import com.scb.externo.shared.NovoCartaoDTO;
@@ -37,7 +37,7 @@ class CartaoCreditoControllerAutenticacaoTests {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
         headers.add("access_token", Key.ASAASKEY);
-        String mensagemEsperada = "Dados inválidos.";
+        String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
         try {
@@ -54,7 +54,7 @@ class CartaoCreditoControllerAutenticacaoTests {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
         headers.add("access_token", Key.ASAASKEY);
-        String mensagemEsperada = "Dados inválidos.";
+        String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
         try {
@@ -71,7 +71,7 @@ class CartaoCreditoControllerAutenticacaoTests {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
         headers.add("access_token", Key.ASAASKEY);
-        String mensagemEsperada = "Dados inválidos.";
+        String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
         try {
@@ -89,7 +89,7 @@ class CartaoCreditoControllerAutenticacaoTests {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
         headers.add("access_token", Key.ASAASKEY);
-        String mensagemEsperada = "Dados inválidos.";
+        String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
         try {
@@ -103,7 +103,7 @@ class CartaoCreditoControllerAutenticacaoTests {
     }
 
     @Test
-    void autenticacao_Valida() {
+    void autenticacao_valida() {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO("1234", "Victor", "5162306219378829", "2024-05-12");
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
@@ -119,4 +119,20 @@ class CartaoCreditoControllerAutenticacaoTests {
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }
+
+    @Test
+    void autenticacao_not_found_exception() {
+        NovoCartaoDTO novoCartao = new NovoCartaoDTO("1234", "Victor", "5162306219378829", "2024-05-12");
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+        headers.add("access_token", Key.ASAASKEY);
+
+        when(mockedCartaoService.autenticarCartao(headers, novoCartao)).thenThrow(ResourceNotFoundException.class);
+
+       assertThrows(ResourceNotFoundException.class, 
+       () -> {
+         cartaoController.autenticarCartao(headers, novoCartao);
+       }); 
+    }
+
 }

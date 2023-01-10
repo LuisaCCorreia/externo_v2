@@ -24,6 +24,9 @@ public class AutenticarDadosService {
   @Autowired
   DadosCartaoRepository cartaoRepository;
 
+  @Autowired
+  RestTemplate restTemplate;
+
   private String codigoUUID() {
     UUID uuid = UUID.randomUUID();
     return uuid.toString();
@@ -50,7 +53,7 @@ public class AutenticarDadosService {
     NovoCliente novoCliente = new NovoCliente();
     novoCliente.setName(nomeTitular);
     HttpEntity<NovoCliente> entity = new HttpEntity<>(novoCliente, headers);
-    return new RestTemplate().postForEntity(criarClienteURL, entity, APICartaoDeCreditoResponseBody.class);
+    return restTemplate.postForEntity(criarClienteURL, entity, APICartaoDeCreditoResponseBody.class);
   }
 
   public ResponseEntity<APICartaoTokenResponse> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) {
@@ -63,7 +66,7 @@ public class AutenticarDadosService {
       String autenticarCartaoURL = "https://sandbox.asaas.com/api/v3/creditCard/tokenize";
       HttpEntity<NovaTokenizacao> entity = new HttpEntity<>(autenticacao, headers);
 
-      ResponseEntity <APICartaoTokenResponse> respostaTokenizacao = new RestTemplate().postForEntity(autenticarCartaoURL, entity, APICartaoTokenResponse.class);
+      ResponseEntity <APICartaoTokenResponse> respostaTokenizacao = restTemplate.postForEntity(autenticarCartaoURL, entity, APICartaoTokenResponse.class);
       APICartaoTokenResponse bodyTokenizacao = respostaTokenizacao.getBody();
 
       if(bodyTokenizacao != null) {

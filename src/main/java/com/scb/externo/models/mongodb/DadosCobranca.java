@@ -8,9 +8,16 @@ public class DadosCobranca {
     private String status;
     private String horaSolicitacao;
     private String horaFinalizacao;
-    private Float valor;
+    private float valor;
+    private String statusAluguel;
     private String ciclista;
 
+    public String getStatusAluguel() {
+        return statusAluguel;
+    }
+    public void setStatusAluguel(String statusAluguel) {
+        this.statusAluguel = statusAluguel;
+    }
     public String getId() {
         return id;
     }
@@ -35,10 +42,10 @@ public class DadosCobranca {
     public void setHoraFinalizacao(String horaFinalizacao) {
         this.horaFinalizacao = horaFinalizacao;
     }
-    public Float getValor() {
+    public float getValor() {
         return valor;
     }
-    public void setValor(Float valor) {
+    public void setValor(float valor) {
         this.valor = valor;
     }
     public String getCiclista() {

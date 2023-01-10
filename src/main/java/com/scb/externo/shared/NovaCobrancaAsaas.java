@@ -4,10 +4,10 @@ public class NovaCobrancaAsaas {
     private String customer;
     private static String billingType = "CREDIT_CARD";
     private String dueDate;
-    private Float value;
+    private float value;
     private String creditCardToken;
 
-    public NovaCobrancaAsaas(String customer, String dueDate, Float value, String creditCardToken) {
+    public NovaCobrancaAsaas(String customer, String dueDate, float value, String creditCardToken) {
         this.customer = customer;
         this.dueDate = dueDate;
         this.value = value;
@@ -30,10 +30,10 @@ public class NovaCobrancaAsaas {
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
-    public Float getValue() {
+    public float getValue() {
         return value;
     }
-    public void setValue(Float value) {
+    public void setValue(float value) {
         this.value = value;
     }
     public String getCreditCardToken() {

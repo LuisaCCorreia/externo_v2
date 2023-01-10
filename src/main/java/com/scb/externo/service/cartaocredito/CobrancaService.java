@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,16 +27,24 @@ import com.scb.externo.shared.NovaCobrancaDTO;
 public class CobrancaService {
 
     @Autowired
+    RestTemplate restTemplate;
+
+    @Autowired
     DadosCartaoRepository cartaoRepository;
 
     @Autowired
     CobrancaRepository cobrancaRepository;
+
+    private String gerarDataAtual() {
+          
+        Date date = Calendar.getInstance().getTime();  
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");  
+        return dateFormat.format(date);  
+    }
     
     private NovaCobrancaAsaas gerarDadosCobranca(NovaCobrancaDTO novaCobranca) {
         
-        Date date = Calendar.getInstance().getTime();  
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-        String strDate = dateFormat.format(date);  
+        String strDate = gerarDataAtual();  
 
         DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
 
@@ -53,7 +62,7 @@ public class CobrancaService {
 
         HttpEntity<NovaCobrancaAsaas> entity = new HttpEntity<>(novaCobrancaAsaas, headers);
 
-        AsaasCobrancaResponseDTO respostaCobranca = new RestTemplate().postForEntity(fazerCobrancaURL, entity, AsaasCobrancaResponseDTO.class).getBody();
+        AsaasCobrancaResponseDTO respostaCobranca = restTemplate.postForEntity(fazerCobrancaURL, entity, AsaasCobrancaResponseDTO.class).getBody();
         if(respostaCobranca != null) {
 
             DadosCobranca cobrancaResponse = new DadosCobranca();
@@ -71,4 +80,30 @@ public class CobrancaService {
             throw new ResourceNotFoundException("Não encontrado");
         }
     }
+
+    public ResponseEntity<AsaasCobrancaResponseDTO> resgatarCobranca(MultiValueMap<String, String> headers, String idCobranca) {
+        String getCobrancaURL = "https://sandbox.asaas.com/api/v3/payments/{id}";
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+   
+       return restTemplate.exchange(getCobrancaURL, HttpMethod.GET, request, AsaasCobrancaResponseDTO.class,idCobranca);
+    }
+
+
+    public ResponseEntity<DadosCobranca> colocarCobrancaFila(NovaCobrancaDTO novaCobranca) {
+
+        String dataAtual = gerarDataAtual();
+        
+        DadosCobranca dadosCobrancaFila = new DadosCobranca();
+        dadosCobrancaFila.setCiclista(novaCobranca.getCiclista());
+        dadosCobrancaFila.setHoraSolicitacao(dataAtual);
+        dadosCobrancaFila.setHoraFinalizacao(dataAtual);
+        dadosCobrancaFila.setStatus(CobrancaStatus.PENDENTE.getStatus());
+        dadosCobrancaFila.setValor(novaCobranca.getValor());
+
+        registrarDadosCobranca(dadosCobrancaFila);
+        return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
+      
+    }
+    
 }

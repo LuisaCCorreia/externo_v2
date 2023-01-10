@@ -19,14 +19,27 @@ public class EmailController {
     @Autowired
 	EmailService emailService;
 
+	boolean validarEmail(String email) {
+		if(email != null) {
+			String[] partesEmail = email.split("@");
+			return partesEmail.length == 2 && !partesEmail[0].equals("") && !partesEmail[1].equals("");
+		} else {
+			return false;
+		}
+
+	}
+
+	boolean validarMensagem(String mensagem) {
+		return mensagem != null;
+	}
+
 	@PostMapping("/enviarEmail")
 	public ResponseEntity<Email> enviarEmail(@RequestBody NovoEmailDTO email) throws  MessagingException {
-		String[] partesEmail = email.getEmail().split("@");
 
-		if(partesEmail.length == 2 && !partesEmail[0].equals("") && !partesEmail[1].equals("")) {
-			return emailService.enviarEmail(email);
-		} else {
+		if(!validarEmail(email.getEmail()) || !validarMensagem(email.getMensagem())) {
 			throw new ResourceInvalidException("E-mail com formato inválido.");
+		} else {			
+			return emailService.enviarEmail(email);
 		}	
 	}
 }

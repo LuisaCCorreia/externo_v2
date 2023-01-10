@@ -7,10 +7,10 @@ public class AsaasCobrancaResponseDTO {
         private String dateCreated;
         private String customer;
         private String paymentLink;
-        private Float value;
-        private Float netValue;
-        private Float originalValue;
-        private Float interestValue;
+        private float value;
+        private float netValue;
+        private float originalValue;
+        private float interestValue;
         private String description;
         private String billingType;
         private String confirmedDate;
@@ -68,28 +68,28 @@ public class AsaasCobrancaResponseDTO {
         public void setPaymentLink(String paymentLink) {
             this.paymentLink = paymentLink;
         }
-        public Float getValue() {
+        public float getValue() {
             return value;
         }
-        public void setValue(Float value) {
+        public void setValue(float value) {
             this.value = value;
         }
-        public Float getNetValue() {
+        public float getNetValue() {
             return netValue;
         }
-        public void setNetValue(Float netValue) {
+        public void setNetValue(float netValue) {
             this.netValue = netValue;
         }
-        public Float getOriginalValue() {
+        public float getOriginalValue() {
             return originalValue;
         }
-        public void setOriginalValue(Float originalValue) {
+        public void setOriginalValue(float originalValue) {
             this.originalValue = originalValue;
         }
-        public Float getInterestValue() {
+        public float getInterestValue() {
             return interestValue;
         }
-        public void setInterestValue(Float interestValue) {
+        public void setInterestValue(float interestValue) {
             this.interestValue = interestValue;
         }
         public String getDescription() {

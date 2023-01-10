@@ -1,10 +1,9 @@
 package com.scb.externo.email.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-
-import java.util.Random;
-
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,12 +12,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.scb.externo.models.email.Email;
+import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.service.email.EmailService;
 import com.scb.externo.service.email.EnvioEmailService;
 import com.scb.externo.shared.email.NovoEmailDTO;
-
 import jakarta.mail.MessagingException;
 
 @SpringBootTest
@@ -33,15 +31,14 @@ public class EmailServiceTests {
 
 
     @Test
-    void enviar_email_service() throws MessagingException {
+    void enviar_email__valido() throws MessagingException {
 
         NovoEmailDTO novoEmail = new NovoEmailDTO();
         novoEmail.setEmail("luisa.c.correia@edu.unirio.br");
         novoEmail.setMensagem("Mensagem");
 
-        Random geradorId = new Random();
         Email emailCriado = new Email();
-        emailCriado.setId(Integer.toString(geradorId.nextInt(25)));
+        emailCriado.setId(UUID.randomUUID().toString());
         emailCriado.setEmail(novoEmail.getEmail());
         emailCriado.setMensagem(novoEmail.getMensagem());
 
@@ -49,5 +46,22 @@ public class EmailServiceTests {
         ResponseEntity<Email> resposta = emailService.enviarEmail(novoEmail);
         
         assertEquals(HttpStatus.OK, resposta.getStatusCode());
+    }
+
+    
+    @Test
+    void enviar_email__not_found_exception() throws MessagingException {
+
+        NovoEmailDTO novoEmail = new NovoEmailDTO();
+        novoEmail.setEmail("luisa.c.correia@edu.unirio.br");
+        novoEmail.setMensagem("Mensagem");
+
+        when(mockedEnvioService.enviarEmail(novoEmail)).thenThrow(ResourceNotFoundException.class);
+        assertThrows(
+            ResourceNotFoundException.class, 
+            ()->{
+                emailService.enviarEmail(novoEmail);
+            }
+        );
     }
 }

@@ -1,7 +1,6 @@
 package com.scb.externo.service.email;
 
-import java.util.Random;
-
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,6 @@ public class EnvioEmailService {
 
   @Autowired
   EmailRepository emailRepository;
-
-  private Random geradorId = new Random();
     
   public MimeMessage gerarEmail(NovoEmailDTO email) throws jakarta.mail.MessagingException {
     MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -45,7 +42,7 @@ public class EnvioEmailService {
 
       mailSender.send(emailGerado);
       Email emailCriado = new Email();
-      emailCriado.setId(Integer.toString(this.geradorId.nextInt(100000)));
+      emailCriado.setId(UUID.randomUUID().toString());
       emailCriado.setEmail(email.getEmail());
       emailCriado.setMensagem(email.getMensagem());
       emailRepository.registrarEmail(emailCriado);
