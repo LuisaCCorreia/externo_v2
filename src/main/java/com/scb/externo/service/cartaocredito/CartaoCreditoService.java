@@ -1,11 +1,12 @@
 package com.scb.externo.service.cartaocredito;
 
+import java.io.IOException;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.scb.externo.models.mongodb.DadosCobranca;
-import com.scb.externo.shared.APICartaoTokenResponse;
 import com.scb.externo.shared.AsaasCobrancaResponseDTO;
 import com.scb.externo.shared.NovaCobrancaDTO;
 import com.scb.externo.shared.NovoCartaoDTO;
@@ -18,7 +19,7 @@ public class CartaoCreditoService {
   @Autowired
   CobrancaService cobrancaService;
 
-  public ResponseEntity<APICartaoTokenResponse> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) {
+  public ResponseEntity<String> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
     return autenticarService.autenticarCartao(headers, novoCartao);
   }
 

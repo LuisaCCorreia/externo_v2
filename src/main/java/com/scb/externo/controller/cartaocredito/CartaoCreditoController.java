@@ -1,7 +1,9 @@
 package com.scb.externo.controller.cartaocredito;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.UUID;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.scb.externo.models.exceptions.ResourceInvalidException;
 import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.service.cartaocredito.CartaoCreditoService;
-import com.scb.externo.shared.APICartaoTokenResponse;
 import com.scb.externo.shared.AsaasCobrancaResponseDTO;
 import com.scb.externo.shared.NovaCobrancaDTO;
 import com.scb.externo.shared.NovoCartaoDTO;
@@ -65,7 +66,7 @@ public class CartaoCreditoController {
     }
     
     @PostMapping("/validacaocartao")
-    public ResponseEntity<APICartaoTokenResponse> autenticarCartao(@RequestHeader MultiValueMap<String, String> headers, @RequestBody NovoCartaoDTO novoCartao) {
+    public ResponseEntity<String> autenticarCartao(@RequestHeader MultiValueMap<String, String> headers, @RequestBody NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
        if(!validarNome(novoCartao.getNomeTitular()) || !validarCVV(novoCartao.getCvv()) || !validarNumero(novoCartao.getNumero()) || !validarDataValidade(novoCartao.getValidade())) {
             throw new ResourceInvalidException(MENSAGEM422);
        }

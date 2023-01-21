@@ -14,7 +14,7 @@ public class NotFoundExceptionHandle {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<NotFoundError> handleResourceInvalidEmailException(ResourceNotFoundException exception) {
         NotFoundError error = new NotFoundError(UUID.randomUUID().toString(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
     
 }
