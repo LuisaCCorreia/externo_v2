@@ -2,7 +2,6 @@ package com.scb.externo.controller.cartaocredito;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.UUID;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +62,7 @@ public class CartaoCreditoController {
 
     @PostMapping("/cobranca")
     public ResponseEntity<DadosCobranca> realizarCobranca(@RequestBody NovaCobrancaDTO novaCobranca) throws JSONException, IOException, InterruptedException {
-        if(!verificarIdCiclista(novaCobranca.getCiclista()) || !verificarValor(novaCobranca.getValor())) {
+        if( !verificarValor(novaCobranca.getValor())) {
             throw new ResourceInvalidException(MENSAGEM422);
         }
         
@@ -77,7 +76,7 @@ public class CartaoCreditoController {
 
     @PostMapping("/filaCobranca")
     public ResponseEntity<DadosCobranca> colocarCobrancaFila(@RequestBody NovaCobrancaDTO novaCobranca) {
-        if(!verificarIdCiclista(novaCobranca.getCiclista()) || !verificarValor(novaCobranca.getValor())) {
+        if( !verificarValor(novaCobranca.getValor())) {
             throw new ResourceInvalidException(MENSAGEM422);
         }
         return cartaoService.colocarCobrancaFila(novaCobranca);
