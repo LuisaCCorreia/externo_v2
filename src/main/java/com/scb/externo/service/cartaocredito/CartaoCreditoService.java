@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.shared.NovaCobrancaDTO;
 import com.scb.externo.shared.NovoCartaoDTO;
@@ -26,7 +25,7 @@ public class CartaoCreditoService {
     return cobrancaService.realizarCobranca( novaCobranca);
   } 
 
-  public ResponseEntity<String> resgatarCobranca(MultiValueMap<String, String> headers, String idCobranca) throws JSONException, IOException, InterruptedException{
+  public ResponseEntity<String> resgatarCobranca(String idCobranca) throws JSONException, IOException, InterruptedException{
    return cobrancaService.resgatarCobranca(idCobranca);
   }
 

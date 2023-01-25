@@ -71,7 +71,7 @@ public class CartaoCreditoController {
 
     @GetMapping("/cobranca/{idCobranca}")
     public ResponseEntity<String>  resgatarCobranca(@PathVariable String idCobranca) throws JSONException, IOException, InterruptedException {
-        return cartaoService.resgatarCobranca(null, idCobranca);
+        return cartaoService.resgatarCobranca(idCobranca);
     }
 
     @PostMapping("/filaCobranca")
