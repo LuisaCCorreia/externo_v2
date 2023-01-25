@@ -5,10 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,16 +46,13 @@ class CartaoCreditoControllerCobrancaTests {
 
     //Testes de realizar cobrança
     @Test
-    void cobranca_id_ciclista_Invalido() {
+    void cobranca_id_ciclista_Invalido() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,"1234568");
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
         String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
         try {
-            cartaoController.realizarCobranca(headers, novaCobranca);
+            cartaoController.realizarCobranca(novaCobranca);
         } catch (ResourceInvalidException e) {
            mensagemRecebida = e.getMessage();
         }
@@ -61,16 +62,13 @@ class CartaoCreditoControllerCobrancaTests {
 
     // Na API da Asaas o valor mínimo para a cobrança é de 5 reais.
     @Test
-    void cobranca_valor_invalido() {
+    void cobranca_valor_invalido() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 4.99,"7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
         String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
         try {
-            cartaoController.realizarCobranca(headers, novaCobranca);
+            cartaoController.realizarCobranca(novaCobranca);
         } catch (ResourceInvalidException e) {
            mensagemRecebida = e.getMessage();
         }
@@ -79,12 +77,8 @@ class CartaoCreditoControllerCobrancaTests {
     }
 
     @Test
-    void cobranca_valida() {
+    void cobranca_valida() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,"7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
-
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
         String strDate = dateFormat.format(date);  
@@ -98,25 +92,25 @@ class CartaoCreditoControllerCobrancaTests {
         dadosRetornados.setStatus(CobrancaStatus.PAGA.getStatus());
         dadosRetornados.setValor(novaCobranca.getValor());
         
-        when(mockedCartaoService.realizarCobranca(headers, novaCobranca)).thenReturn(new ResponseEntity<DadosCobranca>(dadosRetornados, HttpStatus.OK));
+        when(mockedCartaoService.realizarCobranca(novaCobranca)).thenReturn(new ResponseEntity<DadosCobranca>(dadosRetornados, HttpStatus.OK));
 
-        ResponseEntity<DadosCobranca> respostaRecebida = cartaoController.realizarCobranca(headers, novaCobranca);
+        ResponseEntity<DadosCobranca> respostaRecebida = cartaoController.realizarCobranca(novaCobranca);
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }
 
     @Test
-    void cobranca_not_found_exception() {
+    void cobranca_not_found_exception() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,"7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
         headers.add("access_token", Key.ASAASKEY);
 
-        when(mockedCartaoService.realizarCobranca(any(), any())).thenThrow(ResourceNotFoundException.class);
+        when(mockedCartaoService.realizarCobranca(any())).thenThrow(ResourceNotFoundException.class);
 
        assertThrows(ResourceNotFoundException.class, 
        () -> {
-         cartaoController.realizarCobranca(headers, novaCobranca);
+         cartaoController.realizarCobranca(novaCobranca);
        }); 
     }
 

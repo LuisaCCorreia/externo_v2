@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.scb.externo.models.mongodb.DadosCobranca;
-import com.scb.externo.shared.AsaasCobrancaResponseDTO;
 import com.scb.externo.shared.NovaCobrancaDTO;
 import com.scb.externo.shared.NovoCartaoDTO;
 
@@ -19,16 +18,16 @@ public class CartaoCreditoService {
   @Autowired
   CobrancaService cobrancaService;
 
-  public ResponseEntity<String> autenticarCartao(MultiValueMap<String, String> headers, NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
-    return autenticarService.autenticarCartao(headers, novoCartao);
+  public ResponseEntity<String> autenticarCartao(NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
+    return autenticarService.autenticarCartao(novoCartao);
   }
 
-  public ResponseEntity<DadosCobranca> realizarCobranca(MultiValueMap<String, String> headers, NovaCobrancaDTO novaCobranca) {
-    return cobrancaService.realizarCobranca(headers, novaCobranca);
+  public ResponseEntity<DadosCobranca> realizarCobranca(NovaCobrancaDTO novaCobranca) throws JSONException, IOException, InterruptedException {
+    return cobrancaService.realizarCobranca( novaCobranca);
   } 
 
-  public ResponseEntity<AsaasCobrancaResponseDTO> resgatarCobranca(MultiValueMap<String, String> headers, String idCobranca){
-   return cobrancaService.resgatarCobranca(headers, idCobranca);
+  public ResponseEntity<String> resgatarCobranca(MultiValueMap<String, String> headers, String idCobranca) throws JSONException, IOException, InterruptedException{
+   return cobrancaService.resgatarCobranca(idCobranca);
   }
 
   public ResponseEntity<DadosCobranca> colocarCobrancaFila(NovaCobrancaDTO novaCobranca) {

@@ -71,28 +71,21 @@ class CartaoCreditoServiceTests {
     @Test
     void autenticacao_invalida_not_found() throws IOException, InterruptedException, JSONException {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO("1234", "Victor", "5162306219378829", "2024-05-12");
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
 
-        when(mockedAutenticacaoService.autenticarCartao(headers, novoCartao)).thenThrow(ResourceNotFoundException.class);
+        when(mockedAutenticacaoService.autenticarCartao(novoCartao)).thenThrow(ResourceNotFoundException.class);
 
         assertThrows(
             ResourceNotFoundException.class, 
             ()->{
-                cartaoService.autenticarCartao(headers, novoCartao);
+                cartaoService.autenticarCartao(novoCartao);
             }
         );
     }
 
     //Testes de realizar cobrança
     @Test
-    void realizar_cobranca_valida() {
+    void realizar_cobranca_valida() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,"7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
-
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
         String strDate = dateFormat.format(date);  
@@ -106,27 +99,23 @@ class CartaoCreditoServiceTests {
         dadosRetornados.setStatus(CobrancaStatus.PAGA.getStatus());
         dadosRetornados.setValor(novaCobranca.getValor());
         
-        when(mockedCobrancaService.realizarCobranca(headers, novaCobranca)).thenReturn(new ResponseEntity<DadosCobranca>(dadosRetornados, HttpStatus.OK));
+        when(mockedCobrancaService.realizarCobranca(novaCobranca)).thenReturn(new ResponseEntity<DadosCobranca>(dadosRetornados, HttpStatus.OK));
 
-        ResponseEntity<DadosCobranca> respostaRecebida = cartaoService.realizarCobranca(headers, novaCobranca);
+        ResponseEntity<DadosCobranca> respostaRecebida = cartaoService.realizarCobranca(novaCobranca);
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }   
 
     @Test
-    void realizar_cobranca_not_found() {
+    void realizar_cobranca_not_found() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,"7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
 
-
-        when(mockedCobrancaService.realizarCobranca(headers, novaCobranca)).thenThrow(ResourceNotFoundException.class);
+        when(mockedCobrancaService.realizarCobranca(novaCobranca)).thenThrow(ResourceNotFoundException.class);
 
         assertThrows(
             ResourceNotFoundException.class,
             () -> {
-                cartaoService.realizarCobranca(headers, novaCobranca);
+                cartaoService.realizarCobranca(novaCobranca);
             }
         );
     }   

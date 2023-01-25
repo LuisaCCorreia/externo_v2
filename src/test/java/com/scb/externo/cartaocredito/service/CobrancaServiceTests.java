@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,12 +51,7 @@ class CobrancaServiceTests {
 
     //Testes realizar cobrança
     @Test
-    void realizar_cobranca_valida() {
-
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
-
+    void realizar_cobranca_valida() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 10.00 , "7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
         DadosToken dadosToken = new DadosToken(novaCobranca.getCiclista(), "cus_000005077278", "4ae91611-5a92-42bf-ad17-a45124c11b19");
 
@@ -87,17 +86,13 @@ class CobrancaServiceTests {
         when(mockedCartaoRepository.findByCiclista(novaCobranca.getCiclista())).thenReturn(dadosToken);
         when(mockedCobrancaRespository.save(any())).thenReturn(any());
 
-        ResponseEntity<DadosCobranca> respostaRecebida = cobrancaService.realizarCobranca(headers, novaCobranca);
+        ResponseEntity<DadosCobranca> respostaRecebida = cobrancaService.realizarCobranca(novaCobranca);
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());       
     }
 
     @Test
     void realizar_cobranca_not_found() {       
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Content-Type", "application/json");
-        headers.add("access_token", Key.ASAASKEY);
-
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 10.00 , "7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
         DadosToken dadosToken = new DadosToken(novaCobranca.getCiclista(), "cus_000005077278", "4ae91611-5a92-42bf-ad17-a45124c11b19");
 
@@ -112,7 +107,7 @@ class CobrancaServiceTests {
         assertThrows(
             ResourceNotFoundException.class, 
             ()->{
-                cobrancaService.realizarCobranca(headers, novaCobranca);
+                cobrancaService.realizarCobranca(novaCobranca);
             }
         );   
     }
