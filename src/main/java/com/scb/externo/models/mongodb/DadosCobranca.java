@@ -10,9 +10,17 @@ public class DadosCobranca {
     private String horaFinalizacao;
     private float valor;
     private String ciclista;
+    private String customer;
+    private String token;
 
     public String getId() {
         return id;
+    }
+    public String getToken() {
+        return token;
+    }
+    public void setToken(String token) {
+        this.token = token;
     }
     public void setId(String id) {
         this.id = id;
@@ -46,5 +54,11 @@ public class DadosCobranca {
     }
     public void setCiclista(String ciclista) {
         this.ciclista = ciclista;
+    }
+    public String getCustomer() {
+        return customer;
+    }
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 }

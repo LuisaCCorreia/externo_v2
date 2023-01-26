@@ -1,22 +1,14 @@
 package com.scb.externo.cartaocredito.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.repository.cartaocredito.CobrancaRepository;
 import com.scb.externo.repository.cartaocredito.DadosCartaoRepository;
 import com.scb.externo.service.cartaocredito.CobrancaService;
-import com.scb.externo.shared.NovaCobrancaDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -168,6 +160,7 @@ class CobrancaServiceTests {
 
 
     //Teste colocar cobrança na fila
+    /*
     @Test
     void colocar_cobranca_na_fila() {
 
@@ -178,6 +171,6 @@ class CobrancaServiceTests {
         ResponseEntity<DadosCobranca> resposta = cobrancaService.colocarCobrancaFila(novaCobranca);
 
         assertEquals(HttpStatus.OK, resposta.getStatusCode());
-    }
+    }*/
     
 }

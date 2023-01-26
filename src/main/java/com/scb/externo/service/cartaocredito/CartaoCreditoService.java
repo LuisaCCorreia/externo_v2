@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.shared.NovaCobrancaDTO;
@@ -31,5 +32,11 @@ public class CartaoCreditoService {
 
   public ResponseEntity<DadosCobranca> colocarCobrancaFila(NovaCobrancaDTO novaCobranca) {
     return cobrancaService.colocarCobrancaFila(novaCobranca);
+  }
+
+  // TODO trocar para 43200000
+  @Scheduled(fixedRate = 1800000)
+  public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
+    return cobrancaService.processaCobrancasEmFila();
   }
 }

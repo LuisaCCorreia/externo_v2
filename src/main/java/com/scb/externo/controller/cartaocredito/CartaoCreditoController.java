@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,5 +81,13 @@ public class CartaoCreditoController {
             throw new ResourceInvalidException(MENSAGEM422);
         }
         return cartaoService.colocarCobrancaFila(novaCobranca);
+    }
+
+    
+    // TODO trocar para 43200000
+    @Scheduled(fixedRate = 1800000)
+    @PostMapping("/processaCobrancasEmFila")
+    public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
+     return cartaoService.processaCobrancasEmFila();
     }
 }

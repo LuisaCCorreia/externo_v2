@@ -10,14 +10,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.scb.externo.models.cartaocredito.CobrancaStatus;
+import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.models.mongodb.DadosToken;
 import com.scb.externo.repository.cartaocredito.CobrancaRepository;
@@ -36,6 +40,8 @@ public class CobrancaService {
     @Autowired
     CobrancaRepository cobrancaRepository;
 
+    String fazerCobrancaURL = "https://sandbox.asaas.com/api/v3/payments";
+
     private String gerarDataAtual() {
           
         Date date = Calendar.getInstance().getTime();  
@@ -43,14 +49,13 @@ public class CobrancaService {
         return dateFormat.format(date);  
     }
     
-    private String gerarDadosCobranca(NovaCobrancaDTO novaCobranca) {
+    private String gerarDadosCobranca(String ciclista, String customer,float valor, String token) {
         
         String strDate = gerarDataAtual();  
 
-        DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
-        return "{\"customer\":\"" + dadosCartaoCiclista.getCustomer() + "\", \"billingType\":\"CREDIT_CARD\","+
-        "\"dueDate\":\"" + strDate + "\", \"value\":\"" + novaCobranca.getValor() + "\", \"creditCardToken\":\"" 
-        + dadosCartaoCiclista.getToken() + "\"}";
+        return "{\"customer\":\"" + customer + "\", \"billingType\":\"CREDIT_CARD\","+
+        "\"dueDate\":\"" + strDate + "\", \"value\":\"" + valor + "\", \"creditCardToken\":\"" 
+        + token + "\"}";
     }
 
     private void registrarDadosCobranca(DadosCobranca dadosCobranca ) {
@@ -58,9 +63,11 @@ public class CobrancaService {
     }
 
     public ResponseEntity<DadosCobranca> realizarCobranca(NovaCobrancaDTO novaCobranca) throws JSONException, IOException, InterruptedException {
-        String fazerCobrancaURL = "https://sandbox.asaas.com/api/v3/payments";
+
+        DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
         
-        String bodyRealizarCobranca = gerarDadosCobranca(novaCobranca);
+        String bodyRealizarCobranca = gerarDadosCobranca(novaCobranca.getCiclista(), dadosCartaoCiclista.getCustomer(),
+        novaCobranca.getValor(), dadosCartaoCiclista.getToken());
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
         .POST(BodyPublishers.ofString(bodyRealizarCobranca)).
@@ -82,6 +89,8 @@ public class CobrancaService {
         cobrancaResponse.setId(responseRealizarCobranca.get("id").toString());
         cobrancaResponse.setStatus(CobrancaStatus.PAGA.getStatus());
         cobrancaResponse.setValor(valorCobrado);
+        cobrancaResponse.setCustomer(responseRealizarCobranca.get("customer").toString());
+        cobrancaResponse.setToken(dadosCartaoCiclista.getToken());
 
         registrarDadosCobranca(cobrancaResponse);
 
@@ -109,6 +118,7 @@ public class CobrancaService {
     public ResponseEntity<DadosCobranca> colocarCobrancaFila(NovaCobrancaDTO novaCobranca) {
 
         String dataAtual = gerarDataAtual();
+        DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
         
         DadosCobranca dadosCobrancaFila = new DadosCobranca();
         dadosCobrancaFila.setCiclista(novaCobranca.getCiclista());
@@ -116,10 +126,43 @@ public class CobrancaService {
         dadosCobrancaFila.setHoraFinalizacao(dataAtual);
         dadosCobrancaFila.setStatus(CobrancaStatus.PENDENTE.getStatus());
         dadosCobrancaFila.setValor(novaCobranca.getValor());
+        dadosCobrancaFila.setCustomer(dadosCartaoCiclista.getCustomer());
+        dadosCobrancaFila.setToken(dadosCartaoCiclista.getToken());
 
         registrarDadosCobranca(dadosCobrancaFila);
         return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
-      
     }
-    
+
+    // TODO trocar para 43200000
+    @Scheduled(fixedRate = 1800000)
+    public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
+
+        try {
+            List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
+
+            if(cobrancasPendentes.size() > 0) {
+                for(int i = 0; i < cobrancasPendentes.size(); i++) {
+                    String cobrancaAtrasada = gerarDadosCobranca(cobrancasPendentes.get(i).getCiclista(),
+                     cobrancasPendentes.get(i).getCustomer(), cobrancasPendentes.get(i).getValor(), 
+                     cobrancasPendentes.get(i).getToken());
+                    HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .POST(BodyPublishers.ofString(cobrancaAtrasada)).
+                    uri(URI.create(fazerCobrancaURL))
+                    .headers("Content-Type", "application/json")
+                    .headers("access_token", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNDU1NDA6OiRhYWNoXzcxM2I0ODFhLTM3M2QtNGM3Ny04MWNiLTdkY2U5YzE0OWNkOA==")
+                    .build();
+                
+                    HttpClient client = HttpClient.newBuilder().build();
+                    client.send(httpRequest, BodyHandlers.ofString());
+                    cobrancasPendentes.get(i).setStatus(CobrancaStatus.PAGA.getStatus());
+                    cobrancaRepository.save(cobrancasPendentes.get(i));
+                }
+            }
+            return new ResponseEntity<String>("Processamento concluído com sucesso", HttpStatus.OK);
+
+        } catch (Exception e) {
+           throw new ResourceNotFoundException("Dados inválidos");
+        }
+     
+    } 
 }
