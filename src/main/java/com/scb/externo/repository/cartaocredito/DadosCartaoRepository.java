@@ -7,5 +7,5 @@ import com.scb.externo.models.mongodb.DadosToken;
 
 @Repository
 public interface DadosCartaoRepository extends MongoRepository<DadosToken, String>{
-    DadosToken findByCiclista(String ciclista);
+    DadosToken findByCiclista(long ciclista);
 }

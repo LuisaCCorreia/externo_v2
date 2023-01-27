@@ -9,7 +9,7 @@ public class DadosCobranca {
     private String horaSolicitacao;
     private String horaFinalizacao;
     private float valor;
-    private String ciclista;
+    private long ciclista;
     private String customer;
     private String token;
 
@@ -49,10 +49,10 @@ public class DadosCobranca {
     public void setValor(float valor) {
         this.valor = valor;
     }
-    public String getCiclista() {
+    public long getCiclista() {
         return ciclista;
     }
-    public void setCiclista(String ciclista) {
+    public void setCiclista(long ciclista) {
         this.ciclista = ciclista;
     }
     public String getCustomer() {

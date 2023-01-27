@@ -44,7 +44,7 @@ public class CobrancaService {
         return dateFormat.format(date);  
     }
     
-    private String gerarDadosCobranca(String ciclista, String customer,float valor, String token) {
+    private String gerarDadosCobranca(long ciclista, String customer,float valor, String token) {
         
         String strDate = gerarDataAtual();  
 

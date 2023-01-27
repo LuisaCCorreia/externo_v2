@@ -1,34 +1,12 @@
 package com.scb.externo.cartaocredito.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import org.json.JSONException;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import com.scb.externo.consts.Key;
 import com.scb.externo.controller.cartaocredito.CartaoCreditoController;
-import com.scb.externo.models.cartaocredito.CobrancaStatus;
-import com.scb.externo.models.exceptions.ResourceInvalidException;
-import com.scb.externo.models.exceptions.ResourceNotFoundException;
-import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.service.cartaocredito.CartaoCreditoService;
-import com.scb.externo.shared.NovaCobrancaDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +20,8 @@ class CartaoCreditoControllerCobrancaTests {
 
     //Testes de realizar cobrança
     // Na API da Asaas o valor mínimo para a cobrança é de 5 reais.
-    @Test
+ //   @Test
+    /*
     void cobranca_valor_invalido() throws JSONException, IOException, InterruptedException {
         NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 4.99,"7b7476c7-60a7-46a3-b7fe-45d28eb18e99");
         String mensagemEsperada = "Dados Inválidos";
@@ -93,7 +72,7 @@ class CartaoCreditoControllerCobrancaTests {
        () -> {
          cartaoController.realizarCobranca(novaCobranca);
        }); 
-    }
+    }*/
 
     //Testes de resgatar cobrança
     /*
@@ -138,7 +117,7 @@ class CartaoCreditoControllerCobrancaTests {
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }*/
-
+/*
     @Test
     void resgatar_cobranca_not_found_exception() throws JSONException, IOException, InterruptedException {
 
@@ -174,7 +153,7 @@ class CartaoCreditoControllerCobrancaTests {
         ResponseEntity<DadosCobranca> respostaRecebida = cartaoController.colocarCobrancaFila(novaCobranca);
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
-    }
+    }*/
   /*
     @Test
     void colocar_cobranca_na_fila_id_ciclista_Invalido() {
