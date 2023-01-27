@@ -8,7 +8,6 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.LocalDate;
-import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +25,8 @@ public class AutenticarDadosService {
   @Autowired
   DadosCartaoRepository cartaoRepository;
 
-  private String codigoUUID() {
-    UUID uuid = UUID.randomUUID();
-    return uuid.toString();
-  }
-
-  private void registrarDadosAutenticacao(String clienteId, String tokenCartao) {
-    DadosToken dadosToken = new DadosToken(codigoUUID(),clienteId, tokenCartao);
+  private void registrarDadosAutenticacao(long idCiclista,String clienteId, String tokenCartao) {
+    DadosToken dadosToken = new DadosToken(idCiclista,clienteId, tokenCartao);
     cartaoRepository.save(dadosToken);
   }
 
@@ -76,9 +70,9 @@ public class AutenticarDadosService {
       HttpClient client = HttpClient.newBuilder().build();
       JSONObject responseTokenizacao = new JSONObject(client.send(httpRequest, BodyHandlers.ofString()).body()) ;
 
-      registrarDadosAutenticacao(novoCliente.get("id").toString(), responseTokenizacao.get("creditCardToken").toString());         
+      registrarDadosAutenticacao(novoCartao.getId(),novoCliente.get("id").toString(), responseTokenizacao.get("creditCardToken").toString());         
 
-      return new ResponseEntity<>(responseTokenizacao.toString(), HttpStatus.OK);
+      return new ResponseEntity<>("Dados Atualizados", HttpStatus.OK);
     }   
     
     throw new ResourceNotFoundException("Não encontrado.");  

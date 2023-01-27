@@ -1,12 +1,22 @@
 package com.scb.externo.shared;
 
 public class NovoCartaoDTO {
+    private long id;
     private String cvv;
     private String nomeTitular;
     private String numero;
+    
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
     private String validade;
 
-    public NovoCartaoDTO(String cvv, String nomeTitular, String numero, String validade) {
+    public NovoCartaoDTO(long id, String cvv, String nomeTitular, String numero, String validade) {
+        this.id = id;
         this.cvv = cvv;
         this.nomeTitular = nomeTitular;
         this.numero = numero;

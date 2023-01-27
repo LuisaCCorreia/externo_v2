@@ -5,12 +5,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("dadosToken")
 public class DadosToken {
    
-    private String ciclista;
+    private long ciclista;
     private String customer;
     private String token;
 
     
-    public DadosToken(String ciclista, String customer, String token) {
+    public DadosToken(long ciclista, String customer, String token) {
         this.ciclista = ciclista;
         this.customer = customer;
         this.token = token;
@@ -37,12 +37,12 @@ public class DadosToken {
     }
 
 
-    public String getCiclista() {
+    public long getCiclista() {
         return ciclista;
     }
 
 
-    public void setCiclista(String ciclista) {
+    public void setCiclista(long ciclista) {
         this.ciclista = ciclista;
     }
     

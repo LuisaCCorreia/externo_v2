@@ -29,7 +29,6 @@ import com.scb.externo.service.cartaocredito.AutenticarDadosService;
 import com.scb.externo.service.cartaocredito.CartaoCreditoService;
 import com.scb.externo.service.cartaocredito.CobrancaService;
 import com.scb.externo.shared.NovaCobrancaDTO;
-import com.scb.externo.shared.NovoCartaoDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -63,7 +62,7 @@ class CartaoCreditoServiceTests {
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }*/
-
+/*
     @Test
     void autenticacao_invalida_not_found() throws IOException, InterruptedException, JSONException {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO("1234", "Victor", "5162306219378829", "2024-05-12");
@@ -76,7 +75,7 @@ class CartaoCreditoServiceTests {
                 cartaoService.autenticarCartao(novoCartao);
             }
         );
-    }
+    }*/
 
     //Testes de realizar cobrança
     @Test

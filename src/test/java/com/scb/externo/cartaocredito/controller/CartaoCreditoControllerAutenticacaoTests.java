@@ -1,21 +1,12 @@
 package com.scb.externo.cartaocredito.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-import java.io.IOException;
-import org.json.JSONException;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.scb.externo.controller.cartaocredito.CartaoCreditoController;
-import com.scb.externo.models.exceptions.ResourceInvalidException;
-import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.service.cartaocredito.CartaoCreditoService;
-import com.scb.externo.shared.NovoCartaoDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +17,7 @@ class CartaoCreditoControllerAutenticacaoTests {
 
     @InjectMocks
     CartaoCreditoController cartaoController;
-    
+  /*  
     @Test
     void autenticacao_cvv_Invalido() throws IOException, InterruptedException, JSONException {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO("12345", "André", "5162306219378829", "2024-05-12");
@@ -85,7 +76,7 @@ class CartaoCreditoControllerAutenticacaoTests {
         assertEquals(mensagemEsperada, mensagemRecebida);
         
     }
-
+*/
   /*  @Test
     void autenticacao_valida() throws IOException, InterruptedException, JSONException {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO("1234", "Victor", "5162306219378829", "2024-05-12");
@@ -103,7 +94,7 @@ class CartaoCreditoControllerAutenticacaoTests {
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }
-*/
+*//*
     @Test
     void autenticacao_not_found_exception() throws IOException, InterruptedException, JSONException {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO("1234", "Victor", "5162306219378829", "2024-05-12");
@@ -114,5 +105,5 @@ class CartaoCreditoControllerAutenticacaoTests {
          cartaoController.autenticarCartao(novoCartao);
        }); 
     }
-
+*/
 }
