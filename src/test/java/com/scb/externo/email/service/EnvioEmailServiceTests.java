@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.scb.externo.models.email.Email;
+
+import com.scb.externo.models.mongodb.DadosEmail;
 import com.scb.externo.service.email.EnvioEmailService;
 import com.scb.externo.shared.email.NovoEmailDTO;
 import jakarta.mail.MessagingException;
@@ -24,7 +25,7 @@ class EnvioEmailServiceTests {
         novoEmail.setEmail("teste@email.com");
         novoEmail.setMensagem("Mensagem");
 
-        ResponseEntity<Email> responseEmail = envioService.enviarEmail(novoEmail);
+        ResponseEntity<DadosEmail> responseEmail = envioService.enviarEmail(novoEmail);
 
         assertEquals(HttpStatus.OK,responseEmail.getStatusCode());
 

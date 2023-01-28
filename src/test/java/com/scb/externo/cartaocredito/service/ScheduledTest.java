@@ -17,7 +17,7 @@ class ScheduledTest {
 
     @Test
     void processa_cobranca_fila_awaitility() {
-        Awaitility.await().atMost(5, TimeUnit.MINUTES)
+        Awaitility.await().atMost(12, TimeUnit.HOURS)
         .untilAsserted(()->verify(cobrancaService, atLeast(1)).processaCobrancasEmFila());
 
     }

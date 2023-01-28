@@ -2,15 +2,33 @@ package com.scb.externo.models.mongodb;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.scb.externo.models.email.Email;
-
 @Document("dadosEmail")
 public class DadosEmail {
-    private Email email;
-    public Email getEmail() {
-        return email;
+    private String id;
+    private String emailCadastrado;
+    private String mensagem;
+
+    public String getMensagem() {
+        return mensagem;
     }
-    public void setEmail(Email email) {
-        this.email = email;
-    }  
+
+    public void setMensagem(String mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    public String getEmail() {
+        return emailCadastrado;
+    }
+
+    public void setEmail(String email) {
+        this.emailCadastrado = email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

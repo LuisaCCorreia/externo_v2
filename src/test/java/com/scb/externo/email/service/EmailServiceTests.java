@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.scb.externo.models.email.Email;
 import com.scb.externo.models.exceptions.ResourceNotFoundException;
+import com.scb.externo.models.mongodb.DadosEmail;
 import com.scb.externo.service.email.EmailService;
 import com.scb.externo.service.email.EnvioEmailService;
 import com.scb.externo.shared.email.NovoEmailDTO;
@@ -37,13 +37,13 @@ class EmailServiceTests {
         novoEmail.setEmail("luisa.c.correia@edu.unirio.br");
         novoEmail.setMensagem("Mensagem");
 
-        Email emailCriado = new Email();
+        DadosEmail emailCriado = new DadosEmail();
         emailCriado.setId(UUID.randomUUID().toString());
         emailCriado.setEmail(novoEmail.getEmail());
         emailCriado.setMensagem(novoEmail.getMensagem());
 
-        when(mockedEnvioService.enviarEmail(novoEmail)).thenReturn(new ResponseEntity<Email>(emailCriado, HttpStatus.OK));
-        ResponseEntity<Email> resposta = emailService.enviarEmail(novoEmail);
+        when(mockedEnvioService.enviarEmail(novoEmail)).thenReturn(new ResponseEntity<>(emailCriado, HttpStatus.OK));
+        ResponseEntity<DadosEmail> resposta = emailService.enviarEmail(novoEmail);
         
         assertEquals(HttpStatus.OK, resposta.getStatusCode());
     }

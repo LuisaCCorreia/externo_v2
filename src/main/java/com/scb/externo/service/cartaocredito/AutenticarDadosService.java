@@ -28,7 +28,11 @@ public class AutenticarDadosService {
   DadosCartaoRepository cartaoRepository;
 
   private void registrarDadosAutenticacao(long idCiclista,String clienteId, String tokenCartao) {
-    DadosToken dadosToken = new DadosToken(idCiclista,clienteId, tokenCartao);
+    DadosToken dadosToken = new DadosToken();
+    dadosToken.setCiclista(idCiclista);
+    dadosToken.setCustomer(clienteId);
+    dadosToken.setToken(tokenCartao);
+
     cartaoRepository.save(dadosToken);
   }
 

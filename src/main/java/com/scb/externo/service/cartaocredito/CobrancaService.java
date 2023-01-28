@@ -95,7 +95,7 @@ public class CobrancaService {
        
     }
 
-    public ResponseEntity<String> resgatarCobranca(String idCobranca) throws JSONException, IOException, InterruptedException {
+    public ResponseEntity<String> resgatarCobranca(String idCobranca) throws IOException, InterruptedException {
         String getCobrancaURL = "https://sandbox.asaas.com/api/v3/payments/" + idCobranca;
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -130,10 +130,9 @@ public class CobrancaService {
         return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
     }
 
-    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 43200000)
     public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
 
-        try {
             List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
 
             if(!cobrancasPendentes.isEmpty()) {
@@ -149,16 +148,19 @@ public class CobrancaService {
                     .build();
                 
                     HttpClient client = HttpClient.newBuilder().build();
-                    client.send(httpRequest, BodyHandlers.ofString());
+                    try {
+                        client.send(httpRequest, BodyHandlers.ofString());
+                    } catch (Exception e) {
+                       throw new ResourceNotFoundException("Não encontrado");
+                    }
+
                     cobrancasPendentes.get(i).setStatus(CobrancaStatus.PAGA.getStatus());
                     cobrancaRepository.save(cobrancasPendentes.get(i));
                 }
             }
             return new ResponseEntity<>("Processamento concluído com sucesso", HttpStatus.OK);
 
-        } catch (Exception e) {
-           throw new ResourceNotFoundException("Dados inválidos");
-        }
+        } 
      
     } 
-}
+

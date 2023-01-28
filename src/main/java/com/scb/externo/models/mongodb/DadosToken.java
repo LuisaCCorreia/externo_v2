@@ -9,14 +9,6 @@ public class DadosToken {
     private String customer;
     private String token;
 
-    
-    public DadosToken(long ciclista, String customer, String token) {
-        this.ciclista = ciclista;
-        this.customer = customer;
-        this.token = token;
-    }
-
-
     public String getCustomer() {
         return customer;
     }

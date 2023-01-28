@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.scb.externo.models.email.Email;
 import com.scb.externo.models.exceptions.ResourceInvalidException;
+import com.scb.externo.models.mongodb.DadosEmail;
 import com.scb.externo.service.email.EmailService;
 import com.scb.externo.shared.email.NovoEmailDTO;
 
@@ -34,7 +34,7 @@ public class EmailController {
 	}
 
 	@PostMapping("/enviarEmail")
-	public ResponseEntity<Email> enviarEmail(@RequestBody NovoEmailDTO email) throws  MessagingException {
+	public ResponseEntity<DadosEmail> enviarEmail(@RequestBody NovoEmailDTO email) throws  MessagingException {
 
 		if(!validarEmail(email.getEmail()) || !validarMensagem(email.getMensagem())) {
 			throw new ResourceInvalidException("E-mail com formato inválido.");
