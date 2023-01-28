@@ -128,7 +128,6 @@ public class CobrancaService {
         return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
     }
 
-    // TODO trocar para 43200000
     @Scheduled(fixedRate = 300000)
     public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
 

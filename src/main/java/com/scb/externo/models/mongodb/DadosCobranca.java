@@ -2,6 +2,8 @@ package com.scb.externo.models.mongodb;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Document("dadosCobranca")
 public class DadosCobranca {
     private String id;
@@ -10,7 +12,9 @@ public class DadosCobranca {
     private String horaFinalizacao;
     private float valor;
     private long ciclista;
+    @JsonIgnore
     private String customer;
+    @JsonIgnore
     private String token;
 
     public String getId() {

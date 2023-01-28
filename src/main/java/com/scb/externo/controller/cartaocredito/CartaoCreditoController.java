@@ -26,6 +26,10 @@ public class CartaoCreditoController {
 
     private static final String MENSAGEM422 = "Dados Inválidos";
 
+    private boolean validarIdCiclista(long id) {
+        return id > 0;
+    }
+
     private boolean validarCVV(String cvv) {
         return cvv.matches("\\d{3,4}");
     }
@@ -55,7 +59,7 @@ public class CartaoCreditoController {
     
     @PostMapping("/validacaocartao")
     public ResponseEntity<String> autenticarCartao(@RequestBody NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
-       if(!validarNome(novoCartao.getNomeTitular()) || !validarCVV(novoCartao.getCvv()) || !validarNumero(novoCartao.getNumero()) || !validarDataValidade(novoCartao.getValidade())) {
+       if(!validarIdCiclista(novoCartao.getId()) ||!validarNome(novoCartao.getNomeTitular()) || !validarCVV(novoCartao.getCvv()) || !validarNumero(novoCartao.getNumero()) || !validarDataValidade(novoCartao.getValidade())) {
             throw new ResourceInvalidException(MENSAGEM422);
        }
         return cartaoService.autenticarCartao(novoCartao);
@@ -63,7 +67,7 @@ public class CartaoCreditoController {
 
     @PostMapping("/cobranca")
     public ResponseEntity<DadosCobranca> realizarCobranca(@RequestBody NovaCobrancaDTO novaCobranca) throws JSONException, IOException, InterruptedException {
-        if( !verificarValor(novaCobranca.getValor())) {
+        if( !validarIdCiclista(novaCobranca.getCiclista()) || !verificarValor(novaCobranca.getValor())) {
             throw new ResourceInvalidException(MENSAGEM422);
         }
         
@@ -77,14 +81,13 @@ public class CartaoCreditoController {
 
     @PostMapping("/filaCobranca")
     public ResponseEntity<DadosCobranca> colocarCobrancaFila(@RequestBody NovaCobrancaDTO novaCobranca) {
-        if( !verificarValor(novaCobranca.getValor())) {
+        if( !validarIdCiclista(novaCobranca.getCiclista()) || !verificarValor(novaCobranca.getValor())) {
             throw new ResourceInvalidException(MENSAGEM422);
         }
         return cartaoService.colocarCobrancaFila(novaCobranca);
     }
 
-    
-    // TODO trocar para 43200000
+
     @Scheduled(fixedRate = 300000)
     @PostMapping("/processaCobrancasEmFila")
     public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
