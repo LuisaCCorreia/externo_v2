@@ -18,10 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import com.scb.externo.consts.HeaderConsts;
 import com.scb.externo.models.cartaocredito.CobrancaStatus;
-import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosCobranca;
 import com.scb.externo.models.mongodb.DadosToken;
 import com.scb.externo.repository.cartaocredito.CobrancaRepository;
@@ -133,33 +131,28 @@ public class CobrancaService {
     @Scheduled(fixedRate = 43200000)
     public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
 
-            List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
+        List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
 
-            if(!cobrancasPendentes.isEmpty()) {
-                for(int i = 0; i < cobrancasPendentes.size(); i++) {
-                    String cobrancaAtrasada = gerarDadosCobranca(cobrancasPendentes.get(i).getCustomer(), 
-                    cobrancasPendentes.get(i).getValor(), 
-                     cobrancasPendentes.get(i).getToken());
-                    HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .POST(BodyPublishers.ofString(cobrancaAtrasada)).
-                    uri(URI.create(fazerCobrancaURL))
-                    .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
-                    .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
-                    .build();
+        if(!cobrancasPendentes.isEmpty()) {
+            for(int i = 0; i < cobrancasPendentes.size(); i++) {
+                String cobrancaAtrasada = gerarDadosCobranca(cobrancasPendentes.get(i).getCustomer(), 
+                cobrancasPendentes.get(i).getValor(), 
+                cobrancasPendentes.get(i).getToken());
+                HttpRequest httpRequest = HttpRequest.newBuilder()
+                .POST(BodyPublishers.ofString(cobrancaAtrasada)).
+                uri(URI.create(fazerCobrancaURL))
+                .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
+                .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
+                .build();
                 
-                    HttpClient client = HttpClient.newBuilder().build();
-                    try {
-                        client.send(httpRequest, BodyHandlers.ofString());
-                    } catch (Exception e) {
-                       throw new ResourceNotFoundException("Não encontrado");
-                    }
-
-                    cobrancasPendentes.get(i).setStatus(CobrancaStatus.PAGA.getStatus());
-                    cobrancaRepository.save(cobrancasPendentes.get(i));
-                }
+                HttpClient client = HttpClient.newBuilder().build();
+                client.send(httpRequest, BodyHandlers.ofString());
+                cobrancasPendentes.get(i).setStatus(CobrancaStatus.PAGA.getStatus());
+                cobrancaRepository.save(cobrancasPendentes.get(i));
             }
-            return new ResponseEntity<>("Processamento concluído com sucesso", HttpStatus.OK);
-
+        }
+        
+        return new ResponseEntity<>("Processamento concluído com sucesso", HttpStatus.OK);
         } 
      
     } 
