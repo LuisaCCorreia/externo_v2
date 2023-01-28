@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.scb.externo.consts.HeaderConsts;
 import com.scb.externo.models.cartaocredito.CobrancaStatus;
 import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosCobranca;
@@ -44,7 +46,7 @@ public class CobrancaService {
         return dateFormat.format(date);  
     }
     
-    private String gerarDadosCobranca(long ciclista, String customer,float valor, String token) {
+    private String gerarDadosCobranca(String customer,float valor, String token) {
         
         String strDate = gerarDataAtual();  
 
@@ -61,14 +63,14 @@ public class CobrancaService {
 
         DadosToken dadosCartaoCiclista = cartaoRepository.findByCiclista(novaCobranca.getCiclista());
         
-        String bodyRealizarCobranca = gerarDadosCobranca(novaCobranca.getCiclista(), dadosCartaoCiclista.getCustomer(),
+        String bodyRealizarCobranca = gerarDadosCobranca( dadosCartaoCiclista.getCustomer(),
         novaCobranca.getValor(), dadosCartaoCiclista.getToken());
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
         .POST(BodyPublishers.ofString(bodyRealizarCobranca)).
         uri(URI.create(fazerCobrancaURL))
-        .headers("Content-Type", "application/json")
-        .headers("access_token", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNDU1NDA6OiRhYWNoXzcxM2I0ODFhLTM3M2QtNGM3Ny04MWNiLTdkY2U5YzE0OWNkOA==")
+        .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
+        .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
         .build();
     
         HttpClient client = HttpClient.newBuilder().build();
@@ -99,8 +101,8 @@ public class CobrancaService {
         HttpRequest httpRequest = HttpRequest.newBuilder()
         .GET()
         .uri(URI.create(getCobrancaURL))
-        .headers("Content-Type", "application/json")
-        .headers("access_token", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNDU1NDA6OiRhYWNoXzcxM2I0ODFhLTM3M2QtNGM3Ny04MWNiLTdkY2U5YzE0OWNkOA==")
+        .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
+        .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
         .build();
     
         HttpClient client = HttpClient.newBuilder().build();
@@ -128,22 +130,22 @@ public class CobrancaService {
         return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 180000)
     public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
 
         try {
             List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
 
-            if(cobrancasPendentes.size() > 0) {
+            if(!cobrancasPendentes.isEmpty()) {
                 for(int i = 0; i < cobrancasPendentes.size(); i++) {
-                    String cobrancaAtrasada = gerarDadosCobranca(cobrancasPendentes.get(i).getCiclista(),
-                     cobrancasPendentes.get(i).getCustomer(), cobrancasPendentes.get(i).getValor(), 
+                    String cobrancaAtrasada = gerarDadosCobranca(cobrancasPendentes.get(i).getCustomer(), 
+                    cobrancasPendentes.get(i).getValor(), 
                      cobrancasPendentes.get(i).getToken());
                     HttpRequest httpRequest = HttpRequest.newBuilder()
                     .POST(BodyPublishers.ofString(cobrancaAtrasada)).
                     uri(URI.create(fazerCobrancaURL))
-                    .headers("Content-Type", "application/json")
-                    .headers("access_token", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNDU1NDA6OiRhYWNoXzcxM2I0ODFhLTM3M2QtNGM3Ny04MWNiLTdkY2U5YzE0OWNkOA==")
+                    .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
+                    .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
                     .build();
                 
                     HttpClient client = HttpClient.newBuilder().build();
@@ -152,7 +154,7 @@ public class CobrancaService {
                     cobrancaRepository.save(cobrancasPendentes.get(i));
                 }
             }
-            return new ResponseEntity<String>("Processamento concluído com sucesso", HttpStatus.OK);
+            return new ResponseEntity<>("Processamento concluído com sucesso", HttpStatus.OK);
 
         } catch (Exception e) {
            throw new ResourceNotFoundException("Dados inválidos");

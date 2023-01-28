@@ -41,7 +41,9 @@ class CartaoCreditoControllerCobrancaTests {
     // Na API da Asaas o valor mínimo para a cobrança é de 5 reais.
    @Test    
     void cobranca_valor_invalido() throws JSONException, IOException, InterruptedException {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 4.99,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor((float)4.99);
+        novaCobranca.setCiclista(1);
         String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
@@ -56,7 +58,9 @@ class CartaoCreditoControllerCobrancaTests {
 
     @Test
     void cobranca_valida() throws JSONException, IOException, InterruptedException {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor(5);
+        novaCobranca.setCiclista(1);
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
         String strDate = dateFormat.format(date);  
@@ -79,7 +83,9 @@ class CartaoCreditoControllerCobrancaTests {
 
     @Test
     void cobranca_not_found_exception() throws JSONException, IOException, InterruptedException {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor(5);
+        novaCobranca.setCiclista(1);
 
         when(mockedCartaoService.realizarCobranca(any())).thenThrow(ResourceNotFoundException.class);
 
@@ -126,7 +132,9 @@ class CartaoCreditoControllerCobrancaTests {
     // Testes de colocar cobrança na fila
     @Test
     void colocar_cobranca_na_fila_sucesso() {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor(5);
+        novaCobranca.setCiclista(1);
 
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
@@ -151,7 +159,9 @@ class CartaoCreditoControllerCobrancaTests {
   
     @Test
     void colocar_cobranca_na_fila_id_ciclista_Invalido() {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5, 0);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor(5);
+        novaCobranca.setCiclista(0);
         String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 
@@ -168,7 +178,9 @@ class CartaoCreditoControllerCobrancaTests {
   
     @Test
     void colocar_cobranca_na_fila_valor_invalido() {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 4.99,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor((float) 4.99);
+        novaCobranca.setCiclista(1);
         String mensagemEsperada = "Dados Inválidos";
         String mensagemRecebida = "";
 

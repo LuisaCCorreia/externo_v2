@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.scb.externo.consts.HeaderConsts;
 import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosToken;
 import com.scb.externo.repository.cartaocredito.DadosCartaoRepository;
@@ -35,8 +37,8 @@ public class AutenticarDadosService {
     HttpRequest httpRequest = HttpRequest.newBuilder()
     .POST(BodyPublishers.ofString("{\"name\": \"" + nomeTitular+"\"}")).
     uri(URI.create(criarClienteURL))
-    .headers("Content-Type", "application/json")
-    .headers("access_token", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNDU1NDA6OiRhYWNoXzcxM2I0ODFhLTM3M2QtNGM3Ny04MWNiLTdkY2U5YzE0OWNkOA==")
+    .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
+    .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
     .build();
 
     HttpClient client = HttpClient.newBuilder().build();
@@ -63,8 +65,8 @@ public class AutenticarDadosService {
       HttpRequest httpRequest = HttpRequest.newBuilder()
       .POST(BodyPublishers.ofString(bodyAutenticarCartao)).
       uri(URI.create(autenticarCartaoURL))
-      .headers("Content-Type", "application/json")
-      .headers("access_token", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNDU1NDA6OiRhYWNoXzcxM2I0ODFhLTM3M2QtNGM3Ny04MWNiLTdkY2U5YzE0OWNkOA==")
+      .headers(HeaderConsts.CONTENT, HeaderConsts.APPLICATION)
+      .headers(HeaderConsts.ACCESS_TOKEN, HeaderConsts.ASAASKEY)
       .build();
   
       HttpClient client = HttpClient.newBuilder().build();

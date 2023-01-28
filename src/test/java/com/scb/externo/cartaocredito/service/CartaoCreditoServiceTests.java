@@ -72,7 +72,9 @@ class CartaoCreditoServiceTests {
     //Testes de realizar cobrança
     @Test
     void realizar_cobranca_valida() throws JSONException, IOException, InterruptedException {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setCiclista(1);
+        novaCobranca.setValor(5);
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
         String strDate = dateFormat.format(date);  
@@ -95,7 +97,9 @@ class CartaoCreditoServiceTests {
 
     @Test
     void realizar_cobranca_not_found() throws JSONException, IOException, InterruptedException {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setCiclista(1);
+        novaCobranca.setValor(5);
 
         when(mockedCobrancaService.realizarCobranca(novaCobranca)).thenThrow(ResourceNotFoundException.class);
 
@@ -141,7 +145,9 @@ class CartaoCreditoServiceTests {
     //Teste de colocar cobrança na fila
     @Test
     void colocar_cobranca_na_fila() {
-        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO((float) 5,1);
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setCiclista(1);
+        novaCobranca.setValor(5);
 
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  

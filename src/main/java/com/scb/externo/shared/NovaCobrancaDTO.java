@@ -4,10 +4,6 @@ public class NovaCobrancaDTO {
     private float valor;
     private long ciclista;
 
-    public NovaCobrancaDTO(float valor, long ciclista) {
-        this.valor = valor;
-        this.ciclista = ciclista;
-    }
     public float getValor() {
         return valor;
     }

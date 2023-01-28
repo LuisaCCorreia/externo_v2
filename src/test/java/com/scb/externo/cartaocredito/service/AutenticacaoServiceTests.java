@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import org.json.JSONObject;
 import org.json.JSONException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,19 +19,12 @@ import com.scb.externo.shared.NovoCliente;
 @ExtendWith(MockitoExtension.class)
 class AutenticacaoServiceTests {
 
-    private int idCiclista = 49;
-
     @Autowired
     AutenticarDadosService autenticacaoService;
 
-    @BeforeEach
-    void incrementaId() {
-        this.idCiclista = this.idCiclista + 1;
-    }
-
     @Test
     void autenticar_cartao_valido() throws IOException, InterruptedException, JSONException {        
-        NovoCartaoDTO novoCartao = new NovoCartaoDTO(this.idCiclista,"214", "Maria", "5162306219378829", "2024-05-12");
+        NovoCartaoDTO novoCartao = new NovoCartaoDTO(50,"214", "Maria", "5162306219378829", "2024-05-12");
         
         ResponseEntity<String> respostaRecebida = autenticacaoService.autenticarCartao(novoCartao);
 
