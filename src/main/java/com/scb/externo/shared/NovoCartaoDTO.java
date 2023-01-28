@@ -14,14 +14,6 @@ public class NovoCartaoDTO {
         this.id = id;
     }
     private String validade;
-
-    public NovoCartaoDTO(long id, String cvv, String nomeTitular, String numero, String validade) {
-        this.id = id;
-        this.cvv = cvv;
-        this.nomeTitular = nomeTitular;
-        this.numero = numero;
-        this.validade = validade;
-    }
     
     public String getCvv() {
         return cvv;

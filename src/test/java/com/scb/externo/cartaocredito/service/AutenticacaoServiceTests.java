@@ -24,7 +24,12 @@ class AutenticacaoServiceTests {
 
     @Test
     void autenticar_cartao_valido() throws IOException, InterruptedException, JSONException {        
-        NovoCartaoDTO novoCartao = new NovoCartaoDTO(50,"214", "Maria", "5162306219378829", "2024-05-12");
+        NovoCartaoDTO novoCartao = new NovoCartaoDTO();
+        novoCartao.setId(50);
+        novoCartao.setCvv("214");
+        novoCartao.setNomeTitular("Maria");
+        novoCartao.setNumero("5162306219378829");
+        novoCartao.setValidade("2024-05-12");
         
         ResponseEntity<String> respostaRecebida = autenticacaoService.autenticarCartao(novoCartao);
 

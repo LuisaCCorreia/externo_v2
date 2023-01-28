@@ -44,7 +44,12 @@ class CartaoCreditoServiceTests {
     //Testes de autenticação
     @Test
     void autenticacao_valida() throws IOException, InterruptedException, JSONException {
-        NovoCartaoDTO novoCartao = new NovoCartaoDTO(1, "1234", "Victor", "5162306219378829", "2024-05-12");
+        NovoCartaoDTO novoCartao = new NovoCartaoDTO();
+        novoCartao.setId(1);
+        novoCartao.setCvv("1234");
+        novoCartao.setNomeTitular("Victor");
+        novoCartao.setNumero("5162306219378829");
+        novoCartao.setValidade("2024-05-12");
 
         String respostaService = "{\"creditCardBrand\":\"MASTERCARD\", \"creditCardNumber\":\"8829\", \"creditCardToken\":"+
         "\"c8594e1d-18bd-4520-af74-be2a45820b41\"}";
@@ -57,7 +62,12 @@ class CartaoCreditoServiceTests {
 
     @Test
     void autenticacao_invalida_not_found() throws IOException, InterruptedException, JSONException {
-        NovoCartaoDTO novoCartao = new NovoCartaoDTO(1,"1234", "Victor", "5162306219378829", "2024-05-12");
+        NovoCartaoDTO novoCartao = new NovoCartaoDTO();
+        novoCartao.setId(1);
+        novoCartao.setCvv("1234");
+        novoCartao.setNomeTitular("Victor");
+        novoCartao.setNumero("5162306219378829");
+        novoCartao.setValidade("2024-05-12");
 
         when(mockedAutenticacaoService.autenticarCartao(novoCartao)).thenThrow(ResourceNotFoundException.class);
 
