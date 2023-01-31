@@ -128,7 +128,7 @@ public class CobrancaService {
         return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
     }
 
-    @Scheduled(fixedRate = 43200000)
+    @Scheduled(fixedRate = 180000)
     public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
 
         List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());

@@ -4,13 +4,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("dadosToken")
 public class DadosToken {
-   
+    private String id;
     private long ciclista;
     private String customer;
     private String token;
 
     public String getCustomer() {
         return customer;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 

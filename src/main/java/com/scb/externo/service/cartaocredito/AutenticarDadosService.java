@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.scb.externo.consts.HeaderConsts;
 import com.scb.externo.models.exceptions.ResourceNotFoundException;
 import com.scb.externo.models.mongodb.DadosToken;
@@ -36,6 +35,13 @@ public class AutenticarDadosService {
     cartaoRepository.save(dadosToken);
   }
 
+  private void AtualizarDadosAutenticacao(DadosToken dadosToken, String novoToken) {
+    
+    dadosToken.setToken(novoToken);
+
+    cartaoRepository.save(dadosToken);
+  }
+
   public ResponseEntity<JSONObject> criarCliente( String nomeTitular) throws IOException, InterruptedException, JSONException {
     String criarClienteURL = "https://sandbox.asaas.com/api/v3/customers";
     HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -53,18 +59,30 @@ public class AutenticarDadosService {
   }
 
   public ResponseEntity<String> autenticarCartao(NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
-    JSONObject novoCliente = criarCliente(novoCartao.getNomeTitular()).getBody();
+    
+    String idCliente = "";
 
-    if(novoCliente != null) {
+    DadosToken clienteExistente = cartaoRepository.findByCiclista(novoCartao.getId());
+    
+    if(clienteExistente != null) {
+      idCliente = clienteExistente.getCustomer();
+      
+    } else {
+      JSONObject novoCliente = criarCliente(novoCartao.getNomeTitular()).getBody();
+      idCliente = novoCliente.get("id").toString();
+    }
+    
+
+    if(idCliente != "") {
       LocalDate data = LocalDate.parse(novoCartao.getValidade());
 
       String bodyAutenticarCartao = "{\"creditCard\": {\"holderName\":\"" 
-      + novoCliente.get("name").toString()
+      + novoCartao.getNomeTitular()
       +"\", \"number\":\"" + novoCartao.getNumero() 
       + "\", \"expiryMonth\":\"" + Integer.toString(data.getMonthValue())
       +"\", \"expiryYear\":\""+Integer.toString(data.getYear()) 
       + "\", \"ccv\":\"" + novoCartao.getCvv() + "\"}, \"customer\":\"" 
-      + novoCliente.get("id").toString() + "\"}";
+      + idCliente + "\"}";
       String autenticarCartaoURL = "https://sandbox.asaas.com/api/v3/creditCard/tokenize";
       HttpRequest httpRequest = HttpRequest.newBuilder()
       .POST(BodyPublishers.ofString(bodyAutenticarCartao)).
@@ -74,10 +92,14 @@ public class AutenticarDadosService {
       .build();
   
       HttpClient client = HttpClient.newBuilder().build();
-      JSONObject responseTokenizacao = new JSONObject(client.send(httpRequest, BodyHandlers.ofString()).body()) ;
+      JSONObject responseTokenizacao = new JSONObject(client.send(httpRequest, BodyHandlers.ofString()).body());
 
-      registrarDadosAutenticacao(novoCartao.getId(),novoCliente.get("id").toString(), responseTokenizacao.get("creditCardToken").toString());         
-
+      if(clienteExistente != null) {
+       AtualizarDadosAutenticacao(clienteExistente, responseTokenizacao.get("creditCardToken").toString());
+      } else {
+        registrarDadosAutenticacao(novoCartao.getId(), idCliente, responseTokenizacao.get("creditCardToken").toString());         
+      }
+      
       return new ResponseEntity<>("Dados Atualizados", HttpStatus.OK);
     }   
     
