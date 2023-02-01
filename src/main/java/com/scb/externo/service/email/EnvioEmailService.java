@@ -26,7 +26,7 @@ public class EnvioEmailService {
     MimeMessage mimeMessage = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
    
-    helper.setFrom("luisa.c.correia@edu.unirio.br");
+    helper.setFrom("support@scb.com");
     helper.setSubject("Sistema de Controle de Bicicletário");
     helper.setText(email.getMensagem());
     helper.setTo(email.getEmail());
