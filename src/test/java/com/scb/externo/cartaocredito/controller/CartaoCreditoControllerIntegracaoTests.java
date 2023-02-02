@@ -20,7 +20,7 @@ import com.scb.externo.shared.NovoCartaoDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class CartaoCreditoControllerIntegracaoTests {
+class CartaoCreditoControllerIntegracaoTests {
 
     @Autowired
     CartaoCreditoController cartaoController;

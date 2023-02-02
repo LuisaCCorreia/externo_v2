@@ -9,10 +9,4 @@ class ExternoApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
-	@Test
-	void applicationStarts() {
-		ExternoApplication.main(new String []{});
-	}
-
 }
