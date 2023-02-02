@@ -68,13 +68,11 @@ public class AutenticarDadosService {
       idCliente = clienteExistente.getCustomer();
       
     } else {
-      try {
-        JSONObject novoCliente = criarCliente(novoCartao.getNomeTitular()).getBody();
-        idCliente = novoCliente.get("id").toString();
-      } catch (Exception e) {
-        throw new NullPointerException();
-      }
+      JSONObject novoCliente = criarCliente(novoCartao.getNomeTitular()).getBody();
 
+      if(novoCliente != null) {
+      idCliente = novoCliente.get("id").toString();
+      }
     }
     
 
