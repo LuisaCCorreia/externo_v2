@@ -33,6 +33,26 @@ class CartaoCreditoControllerAutenticacaoTests {
     CartaoCreditoController cartaoController;
    
     @Test
+    void autenticacao_id_ciclista_invalido() throws IOException, InterruptedException, JSONException {
+        NovoCartaoDTO novoCartao = new NovoCartaoDTO();
+        novoCartao.setId(0);
+        novoCartao.setCvv("1235");
+        novoCartao.setNomeTitular("André");
+        novoCartao.setNumero("5162306219378829");
+        novoCartao.setValidade("2024-05-12");
+
+        String mensagemEsperada = "Dados Inválidos";
+        String mensagemRecebida = "";
+
+        try {
+            cartaoController.autenticarCartao(novoCartao);
+        } catch (ResourceInvalidException e) {
+           mensagemRecebida = e.getMessage();
+        }
+        assertEquals(mensagemEsperada, mensagemRecebida); 
+    }
+
+    @Test
     void autenticacao_cvv_Invalido() throws IOException, InterruptedException, JSONException {
         NovoCartaoDTO novoCartao = new NovoCartaoDTO();
         novoCartao.setId(1);

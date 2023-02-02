@@ -38,6 +38,22 @@ class CartaoCreditoControllerCobrancaTests {
     CartaoCreditoController cartaoController;
 
     //Testes de realizar cobrança
+    @Test    
+    void cobranca_id_ciclista_invalido() throws JSONException, IOException, InterruptedException {
+        NovaCobrancaDTO novaCobranca = new NovaCobrancaDTO();
+        novaCobranca.setValor((float)5);
+        novaCobranca.setCiclista(0);
+        String mensagemEsperada = "Dados Inválidos";
+        String mensagemRecebida = "";
+
+        try {
+            cartaoController.realizarCobranca(novaCobranca);
+        } catch (ResourceInvalidException e) {
+           mensagemRecebida = e.getMessage();
+        }
+
+        assertEquals(mensagemEsperada, mensagemRecebida);
+    }
     // Na API da Asaas o valor mínimo para a cobrança é de 5 reais.
    @Test    
     void cobranca_valor_invalido() throws JSONException, IOException, InterruptedException {

@@ -1,11 +1,11 @@
 package com.scb.externo.models.erros;
 
-public class InvalidDataError {
+public class ErroDadosInvalidos {
     private String id;
     private int status;
     private String mensagem;
 
-    public InvalidDataError(String id, int status, String mensagem) {
+    public ErroDadosInvalidos(String id, int status, String mensagem) {
         this.id = id;
         this.status = status;
         this.mensagem = mensagem;
