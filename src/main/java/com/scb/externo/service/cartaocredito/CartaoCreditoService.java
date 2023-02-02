@@ -34,8 +34,8 @@ public class CartaoCreditoService {
     return cobrancaService.colocarCobrancaFila(novaCobranca);
   }
 
-  @Scheduled(fixedRate = 180000)
-  public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
+  @Scheduled(fixedRate = 43200000)
+  public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException, JSONException {
     return cobrancaService.processaCobrancasEmFila();
   }
 }

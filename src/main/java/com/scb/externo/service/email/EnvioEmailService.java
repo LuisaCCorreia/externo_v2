@@ -1,6 +1,5 @@
 package com.scb.externo.service.email;
 
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +41,6 @@ public class EnvioEmailService {
 
       mailSender.send(emailGerado);
       DadosEmail emailCriado = new DadosEmail();
-      emailCriado.setId(UUID.randomUUID().toString());
       emailCriado.setEmail(email.getEmail());
       emailCriado.setMensagem(email.getMensagem());
           

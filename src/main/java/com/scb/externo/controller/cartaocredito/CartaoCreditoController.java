@@ -88,9 +88,9 @@ public class CartaoCreditoController {
     }
 
 
-    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 43200000)
     @PostMapping("/processaCobrancasEmFila")
-    public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
+    public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException, JSONException {
      return cartaoService.processaCobrancasEmFila();
     }
 }

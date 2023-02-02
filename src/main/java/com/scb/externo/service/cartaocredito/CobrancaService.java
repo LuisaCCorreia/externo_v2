@@ -75,13 +75,12 @@ public class CobrancaService {
         JSONObject responseRealizarCobranca = new JSONObject(client.send(httpRequest, BodyHandlers.ofString()).body()) ;
 
         int valorCobrado = (int) responseRealizarCobranca.get("value");
-        
 
         DadosCobranca cobrancaResponse = new DadosCobranca();
         cobrancaResponse.setCiclista(novaCobranca.getCiclista());
         cobrancaResponse.setHoraFinalizacao(responseRealizarCobranca.get("dueDate").toString());
         cobrancaResponse.setHoraSolicitacao(responseRealizarCobranca.get("dueDate").toString());
-        cobrancaResponse.setId(responseRealizarCobranca.get("id").toString());
+        cobrancaResponse.setCobrancaId(responseRealizarCobranca.get("id").toString());
         cobrancaResponse.setStatus(CobrancaStatus.PAGA.getStatus());
         cobrancaResponse.setValor(valorCobrado);
         cobrancaResponse.setCustomer(responseRealizarCobranca.get("customer").toString());
@@ -121,6 +120,7 @@ public class CobrancaService {
         dadosCobrancaFila.setHoraFinalizacao(dataAtual);
         dadosCobrancaFila.setStatus(CobrancaStatus.PENDENTE.getStatus());
         dadosCobrancaFila.setValor(novaCobranca.getValor());
+        dadosCobrancaFila.setCobrancaId("");
         dadosCobrancaFila.setCustomer(dadosCartaoCiclista.getCustomer());
         dadosCobrancaFila.setToken(dadosCartaoCiclista.getToken());
 
@@ -128,10 +128,8 @@ public class CobrancaService {
         return new ResponseEntity<>(dadosCobrancaFila, HttpStatus.OK);
     }
 
-    @Scheduled(fixedRate = 180000)
-    public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException {
-
-        List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
+    @Scheduled(fixedRate = 43200000)
+    public ResponseEntity<String> processaCobrancasEmFila() throws IOException, InterruptedException, JSONException {        List<DadosCobranca> cobrancasPendentes = cobrancaRepository.findByStatus(CobrancaStatus.PENDENTE.getStatus());
 
         if(!cobrancasPendentes.isEmpty()) {
             for(int i = 0; i < cobrancasPendentes.size(); i++) {
@@ -146,7 +144,8 @@ public class CobrancaService {
                 .build();
                 
                 HttpClient client = HttpClient.newBuilder().build();
-                client.send(httpRequest, BodyHandlers.ofString());
+                JSONObject cobrancaRealizada = new JSONObject(client.send(httpRequest, BodyHandlers.ofString()).body()) ;
+                cobrancasPendentes.get(i).setCobrancaId(cobrancaRealizada.get("id").toString());
                 cobrancasPendentes.get(i).setStatus(CobrancaStatus.PAGA.getStatus());
                 cobrancaRepository.save(cobrancasPendentes.get(i));
             }

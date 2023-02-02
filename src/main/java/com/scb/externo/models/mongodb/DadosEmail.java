@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("dadosEmail")
 public class DadosEmail {
-    private String id;
     private String emailCadastrado;
     private String mensagem;
 
@@ -22,13 +21,5 @@ public class DadosEmail {
 
     public void setEmail(String email) {
         this.emailCadastrado = email;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

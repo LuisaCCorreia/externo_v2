@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document("dadosCobranca")
 public class DadosCobranca {
+    @JsonIgnore
     private String id;
     private String status;
     private String horaSolicitacao;
     private String horaFinalizacao;
     private float valor;
     private long ciclista;
+    private String cobrancaId;
     @JsonIgnore
     private String customer;
     @JsonIgnore
@@ -64,5 +66,11 @@ public class DadosCobranca {
     }
     public void setCustomer(String customer) {
         this.customer = customer;
+    }
+    public String getCobrancaId() {
+        return cobrancaId;
+    }
+    public void setCobrancaId(String cobrancaId) {
+        this.cobrancaId = cobrancaId;
     }
 }

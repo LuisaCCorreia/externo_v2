@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -93,7 +92,6 @@ class EmailControllerTests {
         novoEmail.setMensagem("Mensagem");
 
         DadosEmail emailCriado = new DadosEmail();
-        emailCriado.setId(UUID.randomUUID().toString());
         emailCriado.setEmail(novoEmail.getEmail());
         emailCriado.setMensagem(novoEmail.getMensagem());
         
