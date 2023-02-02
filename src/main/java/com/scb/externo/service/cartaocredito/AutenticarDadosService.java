@@ -58,7 +58,7 @@ public class AutenticarDadosService {
     return new ResponseEntity<>(responseCriarCliente, HttpStatus.OK);
   }
 
-  public ResponseEntity<String> autenticarCartao(NovoCartaoDTO novoCartao) throws NullPointerException, IOException, InterruptedException, JSONException {
+  public ResponseEntity<String> autenticarCartao(NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
     
     String idCliente = "";
 
@@ -68,8 +68,13 @@ public class AutenticarDadosService {
       idCliente = clienteExistente.getCustomer();
       
     } else {
-      JSONObject novoCliente = criarCliente(novoCartao.getNomeTitular()).getBody();
-      idCliente = novoCliente.get("id").toString();
+      try {
+        JSONObject novoCliente = criarCliente(novoCartao.getNomeTitular()).getBody();
+        idCliente = novoCliente.get("id").toString();
+      } catch (Exception e) {
+        throw new NullPointerException();
+      }
+
     }
     
 
