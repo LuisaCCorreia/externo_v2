@@ -58,7 +58,7 @@ public class AutenticarDadosService {
     return new ResponseEntity<>(responseCriarCliente, HttpStatus.OK);
   }
 
-  public ResponseEntity<String> autenticarCartao(NovoCartaoDTO novoCartao) throws IOException, InterruptedException, JSONException {
+  public ResponseEntity<String> autenticarCartao(NovoCartaoDTO novoCartao) throws NullPointerException, IOException, InterruptedException, JSONException {
     
     String idCliente = "";
 
@@ -73,7 +73,7 @@ public class AutenticarDadosService {
     }
     
 
-    if(idCliente != "") {
+    if(!idCliente.equals("")) {
       LocalDate data = LocalDate.parse(novoCartao.getValidade());
 
       String bodyAutenticarCartao = "{\"creditCard\": {\"holderName\":\"" 
