@@ -35,7 +35,7 @@ public class AutenticarDadosService {
     cartaoRepository.save(dadosToken);
   }
 
-  private void ATUALIZARDADOSAUTENTICACAO(DadosToken dadosToken, String novoToken) {
+  private void ATUALIZAR_DADOS_AUTENTICACAO(DadosToken dadosToken, String novoToken) {
     dadosToken.setToken(novoToken);
     cartaoRepository.save(dadosToken);
   }
@@ -96,7 +96,7 @@ public class AutenticarDadosService {
       JSONObject responseTokenizacao = new JSONObject(client.send(httpRequest, BodyHandlers.ofString()).body());
 
       if(clienteExistente != null) {
-       ATUALIZARDADOSAUTENTICACAO(clienteExistente, responseTokenizacao.get("creditCardToken").toString());
+       ATUALIZAR_DADOS_AUTENTICACAO(clienteExistente, responseTokenizacao.get("creditCardToken").toString());
       } else {
         registrarDadosAutenticacao(novoCartao.getId(), idCliente, responseTokenizacao.get("creditCardToken").toString());         
       }
