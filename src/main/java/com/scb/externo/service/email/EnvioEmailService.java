@@ -43,6 +43,7 @@ public class EnvioEmailService {
       DadosEmail emailCriado = new DadosEmail();
       emailCriado.setEmail(email.getEmail());
       emailCriado.setMensagem(email.getMensagem());
+      emailRepository.save(emailCriado);
           
       return new ResponseEntity<>(emailCriado, HttpStatus.OK);
     } catch(Exception e){
