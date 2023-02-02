@@ -26,7 +26,7 @@ public class CartaoCreditoService {
     return cobrancaService.realizarCobranca( novaCobranca);
   } 
 
-  public ResponseEntity<String> resgatarCobranca(String idCobranca) throws JSONException, IOException, InterruptedException{
+  public ResponseEntity<String> resgatarCobranca(String idCobranca) throws IOException, InterruptedException{
    return cobrancaService.resgatarCobranca(idCobranca);
   }
 
