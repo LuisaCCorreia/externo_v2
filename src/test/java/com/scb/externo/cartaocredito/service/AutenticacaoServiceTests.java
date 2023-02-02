@@ -43,7 +43,6 @@ class AutenticacaoServiceTests {
         NovoCliente novoCliente = new NovoCliente();
         novoCliente.setName("Maria");
 
-
         ResponseEntity<JSONObject> respostaRecebida = autenticacaoService.criarCliente(novoCliente.getName());
 
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
